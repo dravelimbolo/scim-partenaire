@@ -11,11 +11,11 @@ import '../widgets/textfield_search.dart';
 
 enum   SelectedOptions { logout }
 
-class AjouteScreen extends StatelessWidget {
+class RejetScreen extends StatelessWidget {
 
   static const String routeName = '/sauvegarde-screen';
 
-  AjouteScreen({super.key});
+  RejetScreen({super.key});
 
   final HomeController controller = HomeController();
 
@@ -61,7 +61,7 @@ class AjouteScreen extends StatelessWidget {
       appBar: AppBar( 
         backgroundColor: const Color(0xFFE3C35A),
         title:  const GenericTextWidget(
-          "Inscription",
+          "Propriétés rejetées",
           strutStyle: StrutStyle(height: 1),
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color:Colors.white),
         ),

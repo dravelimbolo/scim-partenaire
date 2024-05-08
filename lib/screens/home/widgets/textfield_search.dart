@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../home_controller.dart';
-import '../screens/filtre_screen.dart';
+import '../screens/ajout_screen.dart';
 import 'card/widgetcard/generic_text_widget.dart';
 
 class TextFiedSearch extends StatelessWidget {
@@ -21,7 +21,7 @@ class TextFiedSearch extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const RejetScreen(),
+                    builder: (context) => const AjouteScreen(),
                   ),
                 );
               },
@@ -62,7 +62,7 @@ class TextFiedSearch extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const RejetScreen(),
+                    builder: (context) => const AjouteScreen(),
                   ),
                 );
               },
@@ -87,7 +87,7 @@ class TextFiedSearch extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const RejetScreen(),
+                        builder: (context) => const AjouteScreen(),
                       ),
                     );
                   },

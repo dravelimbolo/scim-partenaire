@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'home/screens/filtre_screen.dart';
+import 'home/screens/ajout_screen.dart';
 import 'home/screens/home_screen.dart';
 import 'home/screens/profil_screen.dart';
-import 'home/screens/sauvegarde_screen.dart';
+import 'home/screens/rejet_screen.dart';
 import 'home/widgets/bouton/bottonnavy.dart';
 import 'home/widgets/card/widgetcard/generic_text_widget.dart';
 
@@ -22,8 +22,8 @@ class HomeState extends State<Home> {
   static final List<Widget> _widgetOptions = <Widget>[
 
     HomeScreen(),
-    const RejetScreen(),
-    AjouteScreen(),
+    const AjouteScreen(),
+    RejetScreen(),
     const Profil(),
   ];
 
@@ -59,7 +59,7 @@ class HomeState extends State<Home> {
           ),
           BottomNavyBarItem(
             icon: const Icon(Icons.close),
-            title:  const GenericTextWidget("Rejetés"),
+            title:  const GenericTextWidget("Rejetées"),
             activeColor: const Color.fromARGB(255, 224, 42, 42),
             inactiveColor: const Color(0xFF737373),
           ),

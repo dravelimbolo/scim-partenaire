@@ -11,11 +11,11 @@ import 'providers/bannier/bannier.provider.dart';
 import 'providers/client/client.provider.dart';
 import 'providers/propriete/propriete.provider.dart';
 import 'screens/home.dart';
-import 'screens/home/screens/filtre_screen.dart';
+import 'screens/home/screens/ajout_screen.dart';
 import 'screens/home/screens/home_screen.dart';
 import 'screens/home/screens/profil/apropos_screen.dart';
 import 'screens/home/screens/profil/confidentialite_screen.dart';
-import 'screens/home/screens/sauvegarde_screen.dart';
+import 'screens/home/screens/rejet_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -99,8 +99,8 @@ class MyApp extends StatelessWidget {
             routes: {
               Home.routeName: (cntxt) => const Home(),
               HomeScreen.routeName: (cntxt) =>  HomeScreen(),
-              RejetScreen.routeName: (cntxt) =>  const RejetScreen(),
-              AjouteScreen.routeName: (cntxt) =>  AjouteScreen(),
+              AjouteScreen.routeName: (cntxt) =>  const AjouteScreen(),
+              RejetScreen.routeName: (cntxt) =>  RejetScreen(),
               LoginScreen.routeName: (cntxt) => const LoginScreen(),
               ApropoScreen.routeName: (cntxt) => const ApropoScreen(),
               PoliticScreen.routeName: (cntxt) => const PoliticScreen(),

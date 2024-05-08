@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:scim_partenaire/providers/client/client.provider.dart';
-import 'package:scim_partenaire/screens/home/screens/sauvegarde_screen.dart';
+import 'package:scim_partenaire/screens/home/screens/rejet_screen.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../providers/propriete/propriete.provider.dart';
 import '../../../providers/user.dart';
@@ -267,7 +267,7 @@ class _ProfilState extends State<Profil> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => AjouteScreen(),
+                                              builder: (context) => RejetScreen(),
                                             ),
                                           );
                                         },

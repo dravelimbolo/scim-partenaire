@@ -11,11 +11,11 @@ import 'package:drop_down_search_field/drop_down_search_field.dart';
 import '../widgets/home_appbar.dart';
 import 'reslut_screen.dart';
 
-class RejetScreen extends StatefulWidget {
+class AjouteScreen extends StatefulWidget {
 
   static const String routeName = '/filtre-screen';
   
-  const RejetScreen({super.key});
+  const AjouteScreen({super.key});
 
   static final List<String> arrondissements = ['Makélékélé','Bacongo','Poto-Poto','Moungali','Ouenzé','Talangaï','Mfilou','Madibou','Djiri',];
   static List<String> getArrondissementsuggestions(String query) {
@@ -54,11 +54,13 @@ class RejetScreen extends StatefulWidget {
   }
 
   @override
-  State<RejetScreen> createState() => _RejetScreenState();
+  State<AjouteScreen> createState() => _AjouteScreenState();
 }
 
-class _RejetScreenState extends State<RejetScreen> {
+class _AjouteScreenState extends State<AjouteScreen> {
 
+
+  bool  iscomplete = false;
   String? _nomError;
   String? _prixError1;
   String? _cutionError;
@@ -202,7 +204,7 @@ class _RejetScreenState extends State<RejetScreen> {
         appBar: AppBar(
           backgroundColor: const Color(0xFFE3C35A),
           title: const GenericTextWidget(
-            "Je recherche",
+            "Ajoutes une  propriété",
             strutStyle: StrutStyle(height: 1),
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color:Colors.white),
           ),
@@ -257,13 +259,13 @@ class _RejetScreenState extends State<RejetScreen> {
                     ),
                     Container(
                       width: context.width(),
-                      height: MediaQuery.of(context).size.height,
+                      // height: MediaQuery.of(context).size.height,
                       decoration: const BoxDecoration(
                         color: Colors.white,
                       ),
                       child: Padding(
                         padding: const EdgeInsets.only(
-                            left: 10.0, right: 10.0, top: 0.0),
+                            left: 10.0, right: 10.0, top: 0.0,bottom: 80.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -303,7 +305,7 @@ class _RejetScreenState extends State<RejetScreen> {
                                         );
                                       },
                                       suggestionsCallback: (pattern) {
-                                        return RejetScreen.getTypesproorietesuggestions(pattern);
+                                        return AjouteScreen.getTypesproorietesuggestions(pattern);
                                       },
                                       itemBuilder: (context, String suggestion) {
                                         return ListTile(
@@ -353,7 +355,7 @@ class _RejetScreenState extends State<RejetScreen> {
                                         );
                                       },
                                       suggestionsCallback: (pattern) {
-                                        return RejetScreen.getSousTypesproorietesuggestions(pattern);
+                                        return AjouteScreen.getSousTypesproorietesuggestions(pattern);
                                       },
                                       itemBuilder: (context, String suggestion) {
                                         return ListTile(
@@ -407,7 +409,7 @@ class _RejetScreenState extends State<RejetScreen> {
                                         );
                                       },
                                       suggestionsCallback: (pattern) {
-                                        return RejetScreen.getEtatproorietesuggestions(pattern);
+                                        return AjouteScreen.getEtatproorietesuggestions(pattern);
                                       },
                                       itemBuilder: (context, String suggestion) {
                                         return ListTile(
@@ -457,7 +459,7 @@ class _RejetScreenState extends State<RejetScreen> {
                                         );
                                       },
                                       suggestionsCallback: (pattern) {
-                                        return RejetScreen.getArrondissementsuggestions(pattern);
+                                        return AjouteScreen.getArrondissementsuggestions(pattern);
                                       },
                                       itemBuilder: (context, String suggestion) {
                                         return ListTile(
@@ -678,7 +680,186 @@ class _RejetScreenState extends State<RejetScreen> {
                               ],
                             ),
                             const SizedBox(
-                              height: 20.0,
+                              height: 10.0,
+                            ),
+                            Container(
+                              height: 50,
+                              padding: const EdgeInsets.fromLTRB( 0,0, 0 , 0,),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 1,
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: iscomplete,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      iscomplete = !(iscomplete as bool);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Courant",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: iscomplete,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      iscomplete = !(iscomplete as bool);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Eau",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: iscomplete,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      iscomplete = !(iscomplete as bool);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Parking",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: iscomplete,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      iscomplete = !(iscomplete as bool);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Climatiseur",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         ),
