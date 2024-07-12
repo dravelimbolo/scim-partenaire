@@ -1,15 +1,19 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/propriete/propriete.provider.dart';
 import '../../../providers/user.dart';
 import '../../../utils/constant.dart';
+import '../../home.dart';
 import '../widgets/card/widgetcard/generic_text_widget.dart';
 import 'package:drop_down_search_field/drop_down_search_field.dart';
 
 import '../widgets/home_appbar.dart';
-import 'reslut_screen.dart';
 
 class AjouteScreen extends StatefulWidget {
 
@@ -59,8 +63,21 @@ class AjouteScreen extends StatefulWidget {
 
 class _AjouteScreenState extends State<AjouteScreen> {
 
+  bool aClimatiseur         =   false;
+  bool aTelephone           =   false;
+  bool aCuisine             =   false;
+  bool aGym                 =   false;
+  bool aTelevision          =   false;
+  bool aWifi                =   false;
+  bool aPiscine             =   false;
+  bool aGardien             =   false;
+  bool aCourant             =   false;
+  bool aEau                 =   false;
+  bool aParking             =   false;
+  bool aBacheAEau           =   false;
+  bool aChauffeEau          =   false;
+  bool aGroupeElectrogene   =   false;
 
-  bool  iscomplete = false;
   String? _nomError;
   String? _prixError1;
   String? _cutionError;
@@ -69,10 +86,16 @@ class _AjouteScreenState extends State<AjouteScreen> {
   String? _addressError;
   String? _quartierError;
   String? _secteurError;
+  String? _douchError;
+  String? _toileteError;
+  String? _descriptionError;
 
   String? _arrondissementError;
 
   String? _typesproorieteError;
+  String? _soustypesproorieteError;
+  String? _etatproorieteError;
+
 
   TextEditingController _nomController           =   TextEditingController();
   TextEditingController _salonController         =   TextEditingController();
@@ -82,6 +105,9 @@ class _AjouteScreenState extends State<AjouteScreen> {
   TextEditingController _addressController       =   TextEditingController();
   TextEditingController _quartierController      =   TextEditingController();
   TextEditingController _secteurController       =   TextEditingController();
+  TextEditingController _doucheController        =   TextEditingController();
+  TextEditingController _toileteController       =   TextEditingController();
+  TextEditingController _descriptionController   =   TextEditingController();
 
   @override
   void initState() {
@@ -90,11 +116,14 @@ class _AjouteScreenState extends State<AjouteScreen> {
     _nomController                  =   TextEditingController();
     _salonController                =   TextEditingController();
     _prixController1                =   TextEditingController();
-    _cutionController                =   TextEditingController();
+    _cutionController               =   TextEditingController();
     _chambreController              =   TextEditingController();
     _addressController              =   TextEditingController();
     _quartierController             =   TextEditingController();
     _secteurController              =   TextEditingController();
+    _doucheController               =   TextEditingController();
+    _toileteController              =   TextEditingController();
+    _descriptionController          =   TextEditingController();
   }
 
   @override
@@ -108,9 +137,37 @@ class _AjouteScreenState extends State<AjouteScreen> {
     _addressController.dispose();
     _quartierController.dispose();
     _secteurController.dispose();
+    _doucheController.dispose();
+    _toileteController.dispose();
+    _descriptionController.dispose();
     
     super.dispose();
   }
+
+  List<File> imageFiles = [];
+  File? documentFile;
+
+  Future<void> _pickImages() async {
+    List<XFile>? pickedFiles = await ImagePicker().pickMultiImage();
+    if (pickedFiles != null) {
+      setState(() {
+        imageFiles = pickedFiles.map((file) => File(file.path)).toList();
+      });
+    }
+  }
+
+  Future<void> _pickDocument() async {
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ['pdf', 'doc']);
+    if (result != null) {
+      setState(() {
+        documentFile = File(result.files.single.path!);
+      });
+    }
+  }
+
+
+
 
   Future<bool?> showLogoutDialog(BuildContext context) {
     return showDialog<bool>(
@@ -145,7 +202,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
     );
   }
 
-  void showCustomDialog(String message, IconData icon, Color iconColor) {
+  void showCustomDialog(String message, IconData icon, Color iconColor,{VoidCallback? onPressed}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -168,8 +225,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Ferme le dialogue
+              onPressed: onPressed ?? () {
+                Navigator.of(context).pop(); // Ferme le dialogue par défaut
               },
               child: const Text('OK'),
             ),
@@ -194,6 +251,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
   SuggestionsBoxController suggestionEtatproorieteBoxController = SuggestionsBoxController();
   SuggestionsBoxController suggestionSousTypesproorieteBoxController = SuggestionsBoxController();
 
+
+
   @override
   Widget build(BuildContext context) {
     final ProprieteProvider proprieteProvider = Provider.of<ProprieteProvider>(context);
@@ -204,7 +263,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
         appBar: AppBar(
           backgroundColor: const Color(0xFFE3C35A),
           title: const GenericTextWidget(
-            "Ajoutes une  propriété",
+            "Ajoutez une  propriété",
             strutStyle: StrutStyle(height: 1),
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color:Colors.white),
           ),
@@ -343,7 +402,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                           prefixIcon: const Icon(Icons.apartment_outlined),
                                           labelText: 'Sous type de la propriété',
                                           hintText: 'Selectionnez le sous de la propriété',
-                                          errorText: _typesproorieteError,
+                                          errorText: _soustypesproorieteError,
                                         ),
                                         style : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
                                         controller: _dropdownSearchSousTypesproorieteController,
@@ -397,7 +456,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                           prefixIcon: const Icon(Icons.apartment_outlined),
                                           labelText: 'Etat de la propriété',
                                           hintText: 'Selectionnez le état de la propriété',
-                                          errorText: _typesproorieteError,
+                                          errorText: _etatproorieteError,
                                         ),
                                         style : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
                                         controller: _dropdownSearchEtatproorieteController,
@@ -501,7 +560,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       decoration: kInputDecoration.copyWith(
                                         labelText:  'Addresse de la propriété',
                                         hintText:   'Addresse de la propriété',
-                                        errorText: _chambreError,
+                                        errorText: _addressError,
                                       ),
                                       textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
                                     ),
@@ -646,13 +705,13 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                   child: SizedBox(
                                     height: 60.0,
                                     child: AppTextField(
-                                      controller: _prixController1,
+                                      controller: _doucheController,
                                       textFieldType: TextFieldType.NUMBER,
                                       decoration: kInputDecoration.copyWith(
                                         prefixIcon: const Icon(Icons.bathtub_outlined),
                                         labelText: 'Nombre de douche',
                                         hintText: 'Nombre de douche',
-                                        errorText: _prixError1,
+                                        errorText: _douchError,
                                       ),
                                       textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
                                     ),
@@ -665,13 +724,13 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                   child: SizedBox(
                                     height: 60.0,
                                     child: AppTextField(
-                                      controller: _cutionController,
+                                      controller: _toileteController,
                                       textFieldType: TextFieldType.NUMBER,
                                       decoration: kInputDecoration.copyWith(
                                         suffixIcon: const Icon(Icons.wc_outlined),
                                         labelText: 'Nombre de toilettes',
                                         hintText: 'Nombre de toilettes',
-                                        errorText: _cutionError,
+                                        errorText: _toileteError,
                                       ),
                                       textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
                                     ),
@@ -709,12 +768,12 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Checkbox(
-                                                  value: iscomplete,
+                                                  value: aCourant,
                                                   activeColor: Colors.amber,
                                                   checkColor: Colors.white,
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      iscomplete = !(iscomplete as bool);
+                                                      aCourant = !(aCourant);
                                                       // selectedTask.togolCompleteTask();
                                                     });
                                                   },
@@ -750,12 +809,12 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Checkbox(
-                                                  value: iscomplete,
+                                                  value: aEau,
                                                   activeColor: Colors.amber,
                                                   checkColor: Colors.white,
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      iscomplete = !(iscomplete as bool);
+                                                      aEau = !(aEau);
                                                       // selectedTask.togolCompleteTask();
                                                     });
                                                   },
@@ -791,12 +850,12 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Checkbox(
-                                                  value: iscomplete,
+                                                  value: aParking,
                                                   activeColor: Colors.amber,
                                                   checkColor: Colors.white,
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      iscomplete = !(iscomplete as bool);
+                                                      aParking = !(aParking);
                                                       // selectedTask.togolCompleteTask();
                                                     });
                                                   },
@@ -832,12 +891,53 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Checkbox(
-                                                  value: iscomplete,
+                                                  value: aCuisine,
                                                   activeColor: Colors.amber,
                                                   checkColor: Colors.white,
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      iscomplete = !(iscomplete as bool);
+                                                      aCuisine = !(aCuisine);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Cuisine",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: aClimatiseur,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      aClimatiseur = !(aClimatiseur);
                                                       // selectedTask.togolCompleteTask();
                                                     });
                                                   },
@@ -856,10 +956,461 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                           ),
                                         ),
                                       ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: aChauffeEau,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      aChauffeEau = !(aChauffeEau);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Chauffe-eau",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: aBacheAEau,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      aBacheAEau = !(aBacheAEau);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Bâche à eau",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: aWifi,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      aWifi = !(aWifi);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Wifi",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: aPiscine,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      aPiscine = !(aPiscine);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Piscine",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: aGardien,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      aGardien = !(aGardien);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Gardien",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: aTelevision,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      aTelevision = !(aTelevision);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Télévision",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: aTelephone,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      aTelephone = !(aTelephone);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Téléphone",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: aGym,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      aGym = !(aGym);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Gym",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                        child: Card(
+                                          elevation: 0.0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            side: BorderSide.none,
+                                          ),
+                                          color: Colors.grey[100],
+                                          // padding: EdgeInsets.symmetric(horizontal: 10),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              // crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Checkbox(
+                                                  value: aGroupeElectrogene,
+                                                  activeColor: Colors.amber,
+                                                  checkColor: Colors.white,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      aGroupeElectrogene = !(aGroupeElectrogene);
+                                                      // selectedTask.togolCompleteTask();
+                                                    });
+                                                  },
+                                                ),
+                                                Container(
+                                                  padding: const EdgeInsets.only(top: 0, left: 0),
+                                                  child: GenericTextWidget(
+                                                    "Groupe électrogène",
+                                                    textAlign: TextAlign.center,
+                                                    strutStyle: const StrutStyle(height: 1.0),
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
                                     ],
                                   );
                                 },
                               ),
+                            ),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    height: 100.0,
+                                    child: IconButton(
+                                      onPressed:_pickImages,
+                                      icon: const Icon(Icons.camera_alt_rounded),
+                                      tooltip: 'Sélectionner les images',
+                                      iconSize: 50.0,
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        side: MaterialStateProperty.all(BorderSide(color: kBorderColorTextField, width: 1)),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            _buildImagePreviews(),
+                            const SizedBox(
+                              height: 20.0,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    height: 100.0,
+                                    child: IconButton(
+                                      onPressed:_pickDocument,
+                                      icon: const Icon(Icons.description_rounded),
+                                      // tooltip: 'Sélectionner le document',
+                                      iconSize: 50.0,
+                                      style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                        ),
+                                        side: MaterialStateProperty.all(BorderSide(color: kBorderColorTextField, width: 1)),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            _buildDocumentPreview(),
+                            const SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: SizedBox(
+                                    height: 150.0,
+                                    child: AppTextField(
+                                      controller: _descriptionController,
+                                      textFieldType: TextFieldType.MULTILINE,
+                                      decoration: kInputDecoration.copyWith(
+                                        labelText: 'Description de la propriété',
+                                        hintText: 'Description de la propriété',
+                                        errorText: _descriptionError,
+                                      ),
+                                      textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20.0,
                             ),
                           ],
                         ),
@@ -903,42 +1454,113 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                     );
 
                                     pr.style(
-                                      message: 'Opération en cours...', // Message affiché dans le dialogue
-                                      progressWidget: const CircularProgressIndicator(), // Widget de progression (un cercle de progression)
+                                      message: 'Opération en cours...',
+                                      progressWidget: const CircularProgressIndicator(),
                                     );
 
                                     await pr.show();
+                                    String etatProScim = _selectedEtatprooriete == 'À louer' ? 'louer' : 'vendre';
+                                    String typesprooriete = _selectedTypesprooriete == 'Commercial' ? 'commercial' : 'residentiel';
                                     try {
-                                      await proprieteProvider.fetchRechPropriete(
-                                        _selectedArrondissement,
-                                        _selectedTypesprooriete,
-                                        int.tryParse(_chambreController.text.trim()),
-                                        int.tryParse(_salonController.text.trim()), // Utilisez _salonController.text.trim() s'il s'agit du bon contrôleur
-                                        _prixController1.text.trim(),
+                                      await proprieteProvider.addPropriete(
+                                        _nomController.text.trim(),
                                         _cutionController.text.trim(),
+                                        _prixController1.text.trim(),
+                                        etatProScim,
+                                        typesprooriete,
+                                        _selectedSousTypesprooriete!,
+                                        _addressController.text.trim(),
+                                        _quartierController.text.trim(),
+                                        _selectedArrondissement!,
+                                        _secteurController.text.trim(),
+                                        _chambreController.text.trim(),
+                                        _salonController.text.trim(),
+                                        _doucheController.text.trim(),
+                                        _toileteController.text.trim(),
+                                        aClimatiseur,
+                                        aTelephone,
+                                        aCuisine,
+                                        aGym,
+                                        aTelevision,
+                                        aWifi,
+                                        aPiscine,
+                                        aGardien,
+                                        aCourant,
+                                        aEau,
+                                        aParking,
+                                        aBacheAEau,
+                                        aChauffeEau,
+                                        aGroupeElectrogene,
+                                        _descriptionController.text.trim(),
+                                        imageFiles,
+                                        documentFile
                                       );
+
+
+                                      _nomController.clear();
                                       _salonController.clear();
-                                      _chambreController.clear();
                                       _prixController1.clear();
                                       _cutionController.clear();
+                                      _chambreController.clear();
+                                      _addressController.clear();
+                                      _quartierController.clear();
+                                      _secteurController.clear();
+                                      _doucheController.clear();
+                                      _toileteController.clear();
+                                      _descriptionController.clear();
+
+
                                       _dropdownSearchArrondissementController.clear();
                                       _dropdownSearchTypesproorieteController.clear();
-                                      _selectedArrondissement = null;
-                                      _selectedTypesprooriete = null;
+                                      _dropdownSearchSousTypesproorieteController.clear();
+                                      _dropdownSearchEtatproorieteController.clear();
+
+
+                                      _selectedArrondissement       =   null;
+                                      _selectedTypesprooriete       =   null;
+                                      _selectedSousTypesprooriete   =   null;
+                                      _selectedEtatprooriete        =   null;
+
+
+                                      aClimatiseur         =   false;
+                                      aTelephone           =   false;
+                                      aCuisine             =   false;
+                                      aGym                 =   false;
+                                      aTelevision          =   false;
+                                      aWifi                =   false;
+                                      aPiscine             =   false;
+                                      aGardien             =   false;
+                                      aCourant             =   false;
+                                      aEau                 =   false;
+                                      aParking             =   false;
+                                      aBacheAEau           =   false;
+                                      aChauffeEau          =   false;
+                                      aGroupeElectrogene   =   false;
+
+                                      imageFiles.clear();
+                                      documentFile = null;
                                       
                                       await pr.hide();
+                                      
                                       // ignore: use_build_context_synchronously
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => ResultatScreen(
-                                            proprietes: proprieteProvider.proprietes,
-                                          ),
-                                        ),
+                                      showCustomDialog(
+                                        'Bien ajouté avec succès!', 
+                                        Icons.check, 
+                                        Colors.green,
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => const Home(),
+                                            ),
+                                          );
+                                        },
                                       );
+
                                     } catch (error) {
 
                                       await pr.hide(); // Cache le ProgressDialog en cas d'erreur
-                                      showCustomDialog('Une erreur s\'est produite lors de l\'ajout du produit.', Icons.error, Colors.red);
+                                      showCustomDialog('Une erreur s\'est produite lors de l\'ajout de la propriété.', Icons.error, Colors.red);
                                     
                                     }
                                   },
@@ -955,7 +1577,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                         child: Padding(
                                           padding: EdgeInsets.zero,
                                           child: GenericTextWidget(
-                                            "Rechercher",
+                                            "Ajouter",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               color: Colors.white,
@@ -983,5 +1605,39 @@ class _AjouteScreenState extends State<AjouteScreen> {
         ),
       ),
     );
+  }
+
+
+  Widget _buildImagePreviews() {
+    return GridView.builder(
+      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 8.0,
+        mainAxisSpacing: 8.0,
+      ),
+      itemCount: imageFiles.length,
+      itemBuilder: (context, index) {
+        return Image.file(
+          imageFiles[index],
+          height: 100,
+          width: 100,
+          fit: BoxFit.cover,
+        );
+      },
+    );
+  }
+
+  Widget _buildDocumentPreview() {
+    return documentFile != null
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Document Preview:'),
+              const SizedBox(height: 10),
+              Text('File Name: ${documentFile!.path.split('/').last}'),
+            ],
+          )
+        : Container();
   }
 }

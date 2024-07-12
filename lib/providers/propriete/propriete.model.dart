@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
 
-class Propriete with ChangeNotifier {
+class Propriete with ChangeNotifier{
     String codeScim;
+    List<Image> images;
     String titreScim;
     DateTime dateAddScim;
-    dynamic dateApprobation;
-    dynamic dateDesapprobation;
+    String? dateApprobation;
+    String? dateDesapprobation;
     int cautionScim;
     String montantScim;
     String etatProScim;
@@ -14,7 +15,7 @@ class Propriete with ChangeNotifier {
     String addresseScim;
     String quartierScim;
     String arrondisScim;
-    String? repereadScim;
+    String repereadScim;
     int nombreChambres;
     int nombreSalons;
     int nombreDouche;
@@ -33,11 +34,16 @@ class Propriete with ChangeNotifier {
     bool aBacheAEau;
     bool aChauffeEau;
     bool aGroupeElectrogene;
+    bool aApprouver;
+    bool okApprouver;
+    bool desapprouver;
     String description;
-    String image;
+    String? document;
+    int user;
 
     Propriete({
         required this.codeScim,
+        required this.images,
         required this.titreScim,
         required this.dateAddScim,
         required this.dateApprobation,
@@ -69,12 +75,17 @@ class Propriete with ChangeNotifier {
         required this.aBacheAEau,
         required this.aChauffeEau,
         required this.aGroupeElectrogene,
+        required this.aApprouver,
+        required this.okApprouver,
+        required this.desapprouver,
         required this.description,
-        required this.image,
+        required this.document,
+        required this.user,
     });
 
     factory Propriete.fromJson(Map<String, dynamic> json) => Propriete(
         codeScim: json["code_scim"],
+        images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
         titreScim: json["titre_scim"],
         dateAddScim: DateTime.parse(json["date_add_scim"]),
         dateApprobation: json["date_approbation"],
@@ -106,16 +117,21 @@ class Propriete with ChangeNotifier {
         aBacheAEau: json["a_bache_a_eau"],
         aChauffeEau: json["a_chauffe_eau"],
         aGroupeElectrogene: json["a_groupe_electrogene"],
+        aApprouver: json["a_approuver"],
+        okApprouver: json["ok_approuver"],
+        desapprouver: json["desapprouver"],
         description: json["description"],
-        image: json["image"],
+        document: json["document"],
+        user: json["user"],
     );
 
     Map<String, dynamic> toJson() => {
         "code_scim": codeScim,
+        "images": List<dynamic>.from(images.map((x) => x.toJson())),
         "titre_scim": titreScim,
         "date_add_scim": dateAddScim.toIso8601String(),
-        "date_approbation": dateApprobation,
-        "date_desapprobation": dateDesapprobation,
+        "date_approbation": dateApprobation != null,
+        "date_desapprobation": dateDesapprobation != null,
         "caution_scim": cautionScim,
         "montant_scim": montantScim,
         "etat_pro_scim": etatProScim,
@@ -143,7 +159,35 @@ class Propriete with ChangeNotifier {
         "a_bache_a_eau": aBacheAEau,
         "a_chauffe_eau": aChauffeEau,
         "a_groupe_electrogene": aGroupeElectrogene,
+        "a_approuver": aApprouver,
+        "ok_approuver": okApprouver,
+        "desapprouver": desapprouver,
         "description": description,
+        "document": document,
+        "user": user,
+    };
+}
+
+class Image {
+    int id;
+    String image;
+    String propriete;
+
+    Image({
+        required this.id,
+        required this.image,
+        required this.propriete,
+    });
+
+    factory Image.fromJson(Map<String, dynamic> json) => Image(
+        id: json["id"],
+        image: json["image"],
+        propriete: json["propriete"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
         "image": image,
+        "propriete": propriete,
     };
 }

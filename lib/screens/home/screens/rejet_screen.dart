@@ -105,58 +105,69 @@ class RejetScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () {
-            return proprieteProvider.fetchSauvPropriete();
-          },
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                TextFiedSearch(),
-                const SizedBox(height: 10),
-                      // List<Propriete> data = spanshot.data!;
-                  FutureBuilder(
-                    future: proprieteProvider.fetchSauvPropriete(),
-                    builder: (context, snapShot) {
-                      if (!snapShot.hasData) {
-                        return ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          itemCount: 3,
-                          itemBuilder: (_, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 0.0, right: 0.0),
-                              child: shimerarticleBox01(context: context),
-                            );
-                          }
-                        );
-                      } else {
-                        final List<Propriete> data = snapShot.data!;
-                        return  ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          itemCount: data.length,
-                          itemBuilder: (_, index) {
-                            return ChangeNotifierProvider.value(
-                              value: proprieteProvider.proprietes[index],
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              TextFiedSearch(),
+              const SizedBox(height: 10),
+                    // List<Propriete> data = spanshot.data!;
+                FutureBuilder(
+                  future: proprieteProvider.fetchPropriete(),
+                  builder: (context, snapShot) {
+                    if (!snapShot.hasData) {
+                      return ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        itemCount: 3,
+                        itemBuilder: (_, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 0.0, right: 0.0),
+                            child: shimerarticleBox01(context: context),
+                          );
+                        }
+                      );
+                    } else {
+                      final List<Propriete> data = snapShot.data!.where((propriete) => propriete.desapprouver && !propriete.okApprouver).toList();
+                      return  ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        itemCount: data.length,
+                        itemBuilder: (_, index) {
+                          return Dismissible(
+                            key: Key(data[index].codeScim),
+                            background: Container(
+                              color: Colors.red,
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                            ),
+                            direction: DismissDirection.endToStart,
+                            onDismissed: (direction) {
+                              proprieteProvider.deletePropriete(data[index].codeScim);
+                            },
+                            child: ChangeNotifierProvider.value(
+                              value: data[index],
                               child: const Padding(
                                 padding: EdgeInsets.only(left: 0.0, right: 0.0),
                                 child: ArticleBox(),
                               ),
-                            );
-                          }
-                        );
-                      }
-                    },
-                  )
-              ],
-            ),
+                            ),
+                          );
+                        }
+                      );
+                    }
+                  },
+                )
+            ],
           ),
         ),
       ),

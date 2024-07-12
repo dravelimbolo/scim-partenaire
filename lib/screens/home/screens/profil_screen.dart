@@ -279,7 +279,7 @@ class _ProfilState extends State<Profil> {
                                           ),
                                         ),
                                         title: const Text(
-                                          'Inscription',
+                                          'Rejetées',
                                           style:
                                           TextStyle(color: Colors.black),
                                         ),

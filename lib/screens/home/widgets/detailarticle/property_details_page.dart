@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:scim_partenaire/providers/propriete/propriete.model.dart';
+import 'package:scim_partenaire/providers/propriete/propriete.model.dart' as resoltion;
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -17,7 +17,7 @@ import 'detailarticle.dart';
 class PropertyDetailsPage extends StatefulWidget {
   final int? propertyID;
   final String? heroId;
-  final Propriete propriete;
+  final resoltion.Propriete propriete;
   final String? permaLink;
 
   const PropertyDetailsPage({super.key,
@@ -79,7 +79,7 @@ class PropertyDetailsPageState extends State<PropertyDetailsPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children:[
                         PropertyDetailPageImages(
-                          imageUrlsList :  [widget.propriete.image]
+                          imageUrlsList: widget.propriete.images.map((image) => image.image).toList(),
                         ),
                         Container(
                           padding:  const EdgeInsets.fromLTRB(20, 20, 20, 5),
@@ -124,7 +124,11 @@ class PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                             borderRadius: const BorderRadius.all(Radius.circular(4)),
                                           ),
                                           child: GenericTextWidget(
-                                            const Utf8Codec().decode(widget.propriete.etatProScim.codeUnits),
+                                            widget.propriete.etatProScim == 'louer'
+                                            ? 'À louer'
+                                            : widget.propriete.etatProScim == 'vendre'
+                                              ? 'À vendre'
+                                              : const Utf8Codec().decode(widget.propriete.etatProScim.codeUnits),
                                             strutStyle: const StrutStyle(forceStrutHeight: true),
                                             style: const TextStyle(fontSize: 11.0, fontWeight: FontWeight.w400, color: Colors.black),
                                           ),
@@ -309,40 +313,40 @@ class PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
-                                    child: Card(
-                                      elevation: 0.0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                        side: BorderSide.none,
-                                      ),
-                                      color: Colors.grey[100],
-                                      // padding: EdgeInsets.symmetric(horizontal: 10),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          // crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Icon(
-                                              Icons.square_foot,
-                                              size: 23.0,
-                                            ),
-                                            Container(
-                                              padding: const EdgeInsets.only(top: 0, left: 5),
-                                              child: GenericTextWidget(
-                                                "20*20 m2",
-                                                textAlign: TextAlign.center,
-                                                strutStyle: const StrutStyle(height: 1.0),
-                                                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.only(left: index == 0 ? 0 : 5),
+                                  //   child: Card(
+                                  //     elevation: 0.0,
+                                  //     shape: RoundedRectangleBorder(
+                                  //       borderRadius: BorderRadius.circular(10.0),
+                                  //       side: BorderSide.none,
+                                  //     ),
+                                  //     color: Colors.grey[100],
+                                  //     // padding: EdgeInsets.symmetric(horizontal: 10),
+                                  //     child: Padding(
+                                  //       padding: const EdgeInsets.all(8.0),
+                                  //       child: Row(
+                                  //         // crossAxisAlignment: CrossAxisAlignment.center,
+                                  //         mainAxisSize: MainAxisSize.min,
+                                  //         children: [
+                                  //           const Icon(
+                                  //             Icons.square_foot,
+                                  //             size: 23.0,
+                                  //           ),
+                                  //           Container(
+                                  //             padding: const EdgeInsets.only(top: 0, left: 5),
+                                  //             child: GenericTextWidget(
+                                  //               "20*20 m2",
+                                  //               textAlign: TextAlign.center,
+                                  //               strutStyle: const StrutStyle(height: 1.0),
+                                  //               style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
+                                  //             ),
+                                  //           ),
+                                  //         ],
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               );
                             },
@@ -391,8 +395,8 @@ class PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                               child: GenericTextWidget(
                                                 // widget.propriete.dateApprobation,
                                                 widget.propriete.dateDesapprobation != null ?
-                                                DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.propriete.dateDesapprobation)):
-                                                DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.propriete.dateApprobation)),
+                                                DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.propriete.dateDesapprobation as String)):
+                                                DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.propriete.dateApprobation as String)),
                                                 textAlign: TextAlign.end,
                                                 strutStyle: const StrutStyle(height: 1.0),
                                                 style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
@@ -1044,9 +1048,7 @@ class PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                     ),
                                     const Spacer(),
                                     GenericTextWidget(
-                                      widget.propriete.repereadScim == null ? 
-                                      const Utf8Codec().decode(widget.propriete.quartierScim.codeUnits):
-                                      const Utf8Codec().decode(widget.propriete.repereadScim!.codeUnits),
+                                      const Utf8Codec().decode(widget.propriete.repereadScim.codeUnits),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       strutStyle: const StrutStyle(height: 1.0),

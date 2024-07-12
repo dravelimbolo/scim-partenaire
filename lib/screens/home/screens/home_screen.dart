@@ -4,7 +4,7 @@ import 'package:scim_partenaire/providers/bannier/bannier.model.dart';
 import 'package:scim_partenaire/providers/bannier/bannier.provider.dart';
 import '../../../presentetion/global_widgets/carousel_ad.dart';
 import '../../../presentetion/global_widgets/info_card_ver_list.dart';
-import '../../../providers/propriete/propriete.provider.dart';
+import '../../home.dart';
 import '../home_controller.dart';
 import '../widgets/bouton/bottoncercle.dart';
 import '../widgets/card/widgetcard/generic_text_widget.dart';
@@ -22,15 +22,17 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final ProprieteProvider proprieteProvider = Provider.of<ProprieteProvider>(context);
     final BannierProvider bannierProvider = Provider.of<BannierProvider>(context);
 
     return Scaffold(
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: () {
-            return proprieteProvider.fetchPropriete();
-          },
+          onRefresh: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Home(),
+              ),
+            ),
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: Column(

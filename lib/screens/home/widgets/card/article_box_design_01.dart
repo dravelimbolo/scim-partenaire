@@ -45,7 +45,7 @@ class ArticleBox extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ImageWidget(image: propriete.image),
+                  ImageWidget(image: propriete.images.map((image) => image.image).toList().first,),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -142,7 +142,11 @@ class PropertyTagsWidget extends StatelessWidget {
                 borderRadius:const BorderRadius.all(Radius.circular(4)),
               ),
               child:  GenericTextWidget(
-                const Utf8Codec().decode(soustypeEtat.etatProScim.codeUnits),
+                soustypeEtat.etatProScim == 'louer'
+                ? 'À louer'
+                : soustypeEtat.etatProScim == 'vendre'
+                  ? 'À vendre'
+                  : const Utf8Codec().decode(soustypeEtat.etatProScim.codeUnits),
                 strutStyle: const StrutStyle(forceStrutHeight: true),
                 style: const TextStyle(
                   fontSize: 11.0,
@@ -319,34 +323,34 @@ class PropertyFeaturesWidget extends StatelessWidget {
                 ],
               ),
           ),
-          (propriete.typeSubScim != ("Bureau"))
-          ? Container()
-          : const Expanded(
-              child: Row(
-                children: <Widget>[
-                  Flexible(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 2.0),
-                      child: Icon(Icons.square_foot,
-                          size: 17.0, color: Color(0xFFE3C35A)),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: GenericTextWidget(
-                      "20*20 m2",
-                      strutStyle:
-                          StrutStyle(forceStrutHeight: true),
-                      style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w300,
-                          color: Colors.black),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          // (propriete.typeSubScim != ("Bureau"))
+          Container()
+          // : const Expanded(
+          //     child: Row(
+          //       children: <Widget>[
+          //         Flexible(
+          //           child: Padding(
+          //             padding: EdgeInsets.symmetric(horizontal: 2.0),
+          //             child: Icon(Icons.square_foot,
+          //                 size: 17.0, color: Color(0xFFE3C35A)),
+          //           ),
+          //         ),
+          //         Expanded(
+          //           flex: 3,
+          //           child: GenericTextWidget(
+          //             "20*20 m2",
+          //             strutStyle:
+          //                 StrutStyle(forceStrutHeight: true),
+          //             style: TextStyle(
+          //                 fontSize: 12.0,
+          //                 fontWeight: FontWeight.w300,
+          //                 color: Colors.black),
+          //             overflow: TextOverflow.ellipsis,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
         ],
       ),
     );

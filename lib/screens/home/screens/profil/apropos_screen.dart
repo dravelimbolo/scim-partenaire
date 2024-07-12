@@ -197,15 +197,39 @@ class ApropoScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: GenericTextWidget(
+                      "À propos du développeur :",
+                      strutStyle: const StrutStyle(height: 1.5),
+                      style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color:  Colors.grey[600]),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: GenericTextWidget(
+                    "Dravel IMBOLO e-mail: dravelameguste@gmail.com",
+                    enableCopy: true,
+                    onLongPress: (){
+                      Clipboard.setData(const ClipboardData(text:"Dravel IMBOLO e-mail: dravelameguste@gmail.com"));
+                    },
+                    strutStyle:
+                    const StrutStyle(height:1.6),
+                    style: const TextStyle(fontSize: 14.0, height: 1.6, fontWeight: FontWeight.w300, color: Colors.black),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ),
             ],
           ),
-          
-          // Column(
-          //   children: [
-          //     SizedBox(height: 10),
-                
-          //   ],
-          // ),
         ),
       ),
     );
