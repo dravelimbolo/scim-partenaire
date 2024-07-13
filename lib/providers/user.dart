@@ -1,27 +1,32 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart' show Response;
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:web_socket_channel/io.dart';
 import '../utils/http_exception.dart';
 
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
 class User with ChangeNotifier {
-  static const String domain =
-      'https://scim.pythonanywhere.com/';
+  static const String domain = 'http://192.168.1.68:8000/';
   String? email;
   String? token;
   Timer? logoutTimer;
+  IOWebSocketChannel? _channel;
 
   String? getEmail() => email;
   String? getToken() => token;
+
 
   Future<void> loginUser(String email, String password) async {
     Map<String, String> user = {'username': email, 'password': password};
     try {
       final Uri url = Uri.parse('${domain}api-token-auth/');
+      print(1111);
       final Response response = await http
           .post(
         url,
@@ -31,11 +36,12 @@ class User with ChangeNotifier {
         body: json.encode(user),
       )
           .timeout(
-        const Duration(seconds: 5),
+        const Duration(seconds: 35),
         onTimeout: () {
           return http.Response('{"error": "Request TimeOut"}', 408);
         },
       );
+      print(66666);
       Map<String, dynamic> responseBody = json.decode(response.body);
       if (responseBody.containsKey('token') == true) {
         /// Create the user 'emain & token ID', when the user login successfully
@@ -49,6 +55,7 @@ class User with ChangeNotifier {
           'token': token as String,
         };
         prefs.setString('userAuth', json.encode(userAuth));
+        connectWebSocket();
       } else if (responseBody.containsKey('non_field_errors') == true) {
         /// Wrong username or password
         throw HttpException(responseBody['non_field_errors'][0]);
@@ -67,6 +74,7 @@ class User with ChangeNotifier {
     }
   }
 
+
   Future<bool> tryAutoLogin() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -83,6 +91,7 @@ class User with ChangeNotifier {
       return true;
     }
   }
+
 
   Future<void> createNewUser(
     String firstName, String lastName, String email, String password) async {
@@ -127,6 +136,7 @@ class User with ChangeNotifier {
     }
   }
 
+
   Future<void> logout() async {
     if (logoutTimer != null) {
       logoutTimer!.cancel();
@@ -137,6 +147,13 @@ class User with ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('userAuth');
     notifyListeners();
+
+    print(5555);
+
+    if (_channel != null) {
+      _channel!.sink.close();
+      _channel = null;
+    }
   }
 
   void _autologout() {
@@ -147,7 +164,78 @@ class User with ChangeNotifier {
     final int days = DateTime.now().add(const Duration(days: 1)).day;
     logoutTimer = Timer(Duration(days: days), logout);
   }
+
+  // void connectWebSocket() {
+  //   _channel = IOWebSocketChannel.connect('ws://192.168.1.68:8000/ws/notifications/',
+  //     headers: <String, String>{
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //         'Authorization': 'TOKEN $token',
+  //       },
+  //     );
+  //   _channel!.stream.listen((message) {
+  //     _showNotification(message);
+  //   });
+  // }
+  
+
+  void connectWebSocket() {
+    try {
+      print("Bonjour voici le token: ${token}");
+      _channel = IOWebSocketChannel.connect(
+        'ws://192.168.1.68:8000/ws/notifications/',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'TOKEN $token',
+        },
+      );
+      _channel!.stream.listen((message) {
+        _showNotification(message);
+      }, onError: (error) {
+        print('WebSocket error: $error');
+        // Handle WebSocket error here
+      }, onDone: () {
+        print('WebSocket connection closed');
+        // Handle WebSocket connection closed
+      });
+    } catch (e) {
+      print('Error connecting to WebSocket: $e');
+      // Handle connection error
+    }
+  }
+
+
+  
+  Future<void> _showNotification(String message) async {
+    print(message);
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'your_channel_id',
+      'your_channel_name',
+      channelDescription: 'your channel description',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Notification',
+      message,
+      platformChannelSpecifics,
+      payload: 'item x',
+    );
+  }
 }
+
+
+
+
+
+
+
+
 
 
 

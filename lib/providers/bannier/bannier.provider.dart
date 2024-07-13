@@ -9,7 +9,7 @@ import 'bannier.model.dart';
 
 class BannierProvider with ChangeNotifier {
   static const String domain =
-      'https://scim.pythonanywhere.com/';
+      'http://192.168.1.68:8000/';
 
   List<Bannier> _banniers = [];
   String? email;
