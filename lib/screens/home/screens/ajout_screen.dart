@@ -97,6 +97,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
   String? _typesproorieteError;
   String? _soustypesproorieteError;
   String? _etatproorieteError;
+  String? _imageError;
 
 
   TextEditingController _nomController           =   TextEditingController();
@@ -265,7 +266,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
         appBar: AppBar(
           backgroundColor: const Color(0xFFE3C35A),
           title: const GenericTextWidget(
-            "Ajoutez une  propriété",
+            "Ajoutez une  annonce",
             strutStyle: StrutStyle(height: 1),
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color:Colors.white),
           ),
@@ -332,10 +333,11 @@ class _AjouteScreenState extends State<AjouteScreen> {
                           children: [
                             AppTextField(
                               controller: _nomController,
+                              maxLength: 9,
                               textFieldType: TextFieldType.NAME,
                               decoration: kInputDecoration.copyWith(
-                                labelText: 'Nom de la popriété',
-                                hintText: 'Nom de la popriété',
+                                labelText: "Titre de l'annonce",
+                                hintText: "Titre de l'annonce",
                                 errorText: _nomError,
                               ),
                               textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -352,8 +354,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       textFieldConfiguration: TextFieldConfiguration(
                                         decoration: kInputDecoration.copyWith(
                                           prefixIcon: const Icon(Icons.apartment_outlined),
-                                          labelText: 'Type de la propriété',
-                                          hintText: 'Selectionnez le type de la propriété',
+                                          labelText: "Usage",
+                                          hintText: "Selectionnez l'usage",
                                           errorText: _typesproorieteError,
                                         ),
                                         style : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -361,7 +363,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       ),
                                       noItemsFoundBuilder: (context) {
                                         return const ListTile(
-                                          title: Text('Aucun type trouvé.'),
+                                          title: Text('Aucun usage trouvé.'),
                                           enabled: false,
                                         );
                                       },
@@ -386,7 +388,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                         });
                                       },
                                       suggestionsBoxController: suggestionTypesproorieteBoxController,
-                                      validator: (value) => value!.isEmpty ? 'Veuillez sélectionner un type' : null,
+                                      validator: (value) => value!.isEmpty ? "Veuillez sélectionner l'usage" : null,
                                       onSaved: (value) => _selectedTypesprooriete = value,
                                       displayAllSuggestionWhenTap: true,
                                     ),
@@ -402,8 +404,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       textFieldConfiguration: TextFieldConfiguration(
                                         decoration: kInputDecoration.copyWith(
                                           prefixIcon: const Icon(Icons.apartment_outlined),
-                                          labelText: 'Sous type de la propriété',
-                                          hintText: 'Selectionnez le sous de la propriété',
+                                          labelText: "Typologie",
+                                          hintText: "Selectionnez la typologie",
                                           errorText: _soustypesproorieteError,
                                         ),
                                         style : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -411,7 +413,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       ),
                                       noItemsFoundBuilder: (context) {
                                         return const ListTile(
-                                          title: Text('Aucun sous type trouvé.'),
+                                          title: Text('Aucune typologie trouvée.'),
                                           enabled: false,
                                         );
                                       },
@@ -436,7 +438,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                         });
                                       },
                                       suggestionsBoxController: suggestionSousTypesproorieteBoxController,
-                                      validator: (value) => value!.isEmpty ? 'Veuillez sélectionner un sous type' : null,
+                                      validator: (value) => value!.isEmpty ? 'Veuillez sélectionner une typologie' : null,
                                       onSaved: (value) => _selectedSousTypesprooriete = value,
                                       displayAllSuggestionWhenTap: true,
                                     ),
@@ -456,8 +458,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       textFieldConfiguration: TextFieldConfiguration(
                                         decoration: kInputDecoration.copyWith(
                                           prefixIcon: const Icon(Icons.apartment_outlined),
-                                          labelText: 'Etat de la propriété',
-                                          hintText: 'Selectionnez le état de la propriété',
+                                          labelText: "Catégorie",
+                                          hintText: "Selectionnez la catégorie",
                                           errorText: _etatproorieteError,
                                         ),
                                         style : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -465,7 +467,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       ),
                                       noItemsFoundBuilder: (context) {
                                         return const ListTile(
-                                          title: Text('Aucun état trouvé.'),
+                                          title: Text('Aucun catégorie trouvée.'),
                                           enabled: false,
                                         );
                                       },
@@ -490,7 +492,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                         });
                                       },
                                       suggestionsBoxController: suggestionEtatproorieteBoxController,
-                                      validator: (value) => value!.isEmpty ? 'Veuillez sélectionner un état' : null,
+                                      validator: (value) => value!.isEmpty ? 'Veuillez sélectionner une catégorie' : null,
                                       onSaved: (value) => _selectedEtatprooriete = value,
                                       displayAllSuggestionWhenTap: true,
                                     ),
@@ -506,8 +508,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       textFieldConfiguration: TextFieldConfiguration(
                                         decoration: kInputDecoration.copyWith(
                                           suffixIcon: const Icon(Icons.location_on_outlined),
-                                          labelText: 'Arrondissement de la proprité',
-                                          hintText: 'Selectionnez l\'arrondissement de la proprité',
+                                          labelText: 'Arrondissement',
+                                          hintText: 'Selectionnez l\'arrondissement',
                                           errorText: _arrondissementError,
                                         ),
                                         style : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -560,8 +562,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       controller: _addressController,
                                       textFieldType: TextFieldType.NAME,
                                       decoration: kInputDecoration.copyWith(
-                                        labelText:  'Addresse de la propriété',
-                                        hintText:   'Addresse de la propriété',
+                                        labelText:  "Addresse",
+                                        hintText:   "Addresse",
                                         errorText: _addressError,
                                       ),
                                       textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -582,8 +584,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       controller: _quartierController,
                                       textFieldType: TextFieldType.NAME,
                                       decoration: kInputDecoration.copyWith(
-                                        labelText:  'Quartier de la propriété',
-                                        hintText:   'Quartier de la propriété',
+                                        labelText:  "Quartier",
+                                        hintText:   "Quartier",
                                         errorText: _quartierError,
                                       ),
                                       textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -600,8 +602,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       controller: _secteurController,
                                       textFieldType: TextFieldType.NAME,
                                       decoration: kInputDecoration.copyWith(
-                                        labelText:  'Secteur de la propriété',
-                                        hintText:   'Secteur de la propriété',
+                                        labelText:  "Secteur",
+                                        hintText:   "Secteur",
                                         errorText: _secteurError,
                                       ),
                                       textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -622,8 +624,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       controller: _prixController1,
                                       textFieldType: TextFieldType.NUMBER,
                                       decoration: kInputDecoration.copyWith(
-                                        labelText: 'Prix de la propriété',
-                                        hintText: 'Prix de la propriété',
+                                        labelText: "Prix",
+                                        hintText: "Prix",
                                         errorText: _prixError1,
                                       ),
                                       textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -640,8 +642,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       controller: _cutionController,
                                       textFieldType: TextFieldType.NUMBER,
                                       decoration: kInputDecoration.copyWith(
-                                        labelText: 'Caution de la propriété',
-                                        hintText: 'Caution de la propriété',
+                                        labelText: "Caution",
+                                        hintText: "Caution",
                                         errorText: _cutionError,
                                       ),
                                       textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -664,8 +666,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       decoration: kInputDecoration.copyWith(
                                         prefixIcon: const Icon(Icons.king_bed_outlined),
                                         suffixIcon: const Icon(Icons.king_bed_outlined),
-                                        labelText: 'Nombre de chambre',
-                                        hintText: 'Nombre de chambre',
+                                        labelText: "Nombre de chambre",
+                                        hintText: "Nombre de chambre",
                                         errorText: _chambreError,
                                       ),
                                       textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -1361,6 +1363,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                               ],
                             ),
                             const SizedBox(height: 10),
+                            _buildError(),
+                            const SizedBox(height: 10),
                             _buildImagePreviews(),
                             const SizedBox(
                               height: 20.0,
@@ -1401,8 +1405,8 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                       controller: _descriptionController,
                                       textFieldType: TextFieldType.MULTILINE,
                                       decoration: kInputDecoration.copyWith(
-                                        labelText: 'Description de la propriété',
-                                        hintText: 'Description de la propriété',
+                                        labelText: "Description de l'annonce",
+                                        hintText: "Description de l'annonce",
                                         errorText: _descriptionError,
                                       ),
                                       textStyle : TextStyle(fontWeight: FontWeight.w400, color:  Colors.grey[900]),
@@ -1435,7 +1439,6 @@ class _AjouteScreenState extends State<AjouteScreen> {
                     child: SizedBox(
                       height: 70,
                       child:
-                      // !widget.isInternetConnected ? NoInternetBottomActionBarWidget(onPressed: ()=> widget.noInternetOnPressed!) :
                       Container(
                         padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                         width: MediaQuery.of(context).size.width,
@@ -1449,121 +1452,289 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   onPressed: ()  async {
-                                      
-                                    final ProgressDialog pr = ProgressDialog(
-                                      context,
-                                      isDismissible: false,
-                                    );
-
-                                    pr.style(
-                                      message: 'Opération en cours...',
-                                      progressWidget: const CircularProgressIndicator(),
-                                    );
-
-                                    await pr.show();
-                                    String etatProScim = _selectedEtatprooriete == 'À louer' ? 'louer' : 'vendre';
-                                    String typesprooriete = _selectedTypesprooriete == 'Commercial' ? 'commercial' : 'residentiel';
-                                    try {
-                                      await proprieteProvider.addPropriete(
-                                        _nomController.text.trim(),
-                                        _cutionController.text.trim(),
-                                        _prixController1.text.trim(),
-                                        etatProScim,
-                                        typesprooriete,
-                                        _selectedSousTypesprooriete!,
-                                        _addressController.text.trim(),
-                                        _quartierController.text.trim(),
-                                        _selectedArrondissement!,
-                                        _secteurController.text.trim(),
-                                        _chambreController.text.trim(),
-                                        _salonController.text.trim(),
-                                        _doucheController.text.trim(),
-                                        _toileteController.text.trim(),
-                                        aClimatiseur,
-                                        aTelephone,
-                                        aCuisine,
-                                        aGym,
-                                        aTelevision,
-                                        aWifi,
-                                        aPiscine,
-                                        aGardien,
-                                        aCourant,
-                                        aEau,
-                                        aParking,
-                                        aBacheAEau,
-                                        aChauffeEau,
-                                        aGroupeElectrogene,
-                                        _descriptionController.text.trim(),
-                                        imageFiles,
-                                        documentFile
-                                      );
-
-
-                                      _nomController.clear();
-                                      _salonController.clear();
-                                      _prixController1.clear();
-                                      _cutionController.clear();
-                                      _chambreController.clear();
-                                      _addressController.clear();
-                                      _quartierController.clear();
-                                      _secteurController.clear();
-                                      _doucheController.clear();
-                                      _toileteController.clear();
-                                      _descriptionController.clear();
-
-
-                                      _dropdownSearchArrondissementController.clear();
-                                      _dropdownSearchTypesproorieteController.clear();
-                                      _dropdownSearchSousTypesproorieteController.clear();
-                                      _dropdownSearchEtatproorieteController.clear();
-
-
-                                      _selectedArrondissement       =   null;
-                                      _selectedTypesprooriete       =   null;
-                                      _selectedSousTypesprooriete   =   null;
-                                      _selectedEtatprooriete        =   null;
-
-
-                                      aClimatiseur         =   false;
-                                      aTelephone           =   false;
-                                      aCuisine             =   false;
-                                      aGym                 =   false;
-                                      aTelevision          =   false;
-                                      aWifi                =   false;
-                                      aPiscine             =   false;
-                                      aGardien             =   false;
-                                      aCourant             =   false;
-                                      aEau                 =   false;
-                                      aParking             =   false;
-                                      aBacheAEau           =   false;
-                                      aChauffeEau          =   false;
-                                      aGroupeElectrogene   =   false;
-
-                                      imageFiles.clear();
-                                      documentFile = null;
-                                      
-                                      await pr.hide();
-                                      
-                                      // ignore: use_build_context_synchronously
-                                      showCustomDialog(
-                                        'Bien ajouté avec succès!', 
-                                        Icons.check, 
-                                        Colors.green,
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => const Home(),
-                                            ),
-                                          );
-                                        },
-                                      );
-
-                                    } catch (error) {
-
-                                      await pr.hide(); // Cache le ProgressDialog en cas d'erreur
-                                      showCustomDialog('Une erreur s\'est produite lors de l\'ajout de la propriété.', Icons.error, Colors.red);
+                                    setState(() {
+                                      _nomError = null;
+                                      _typesproorieteError = null;
+                                      _soustypesproorieteError = null;
+                                      _etatproorieteError = null;
+                                      _arrondissementError = null;
+                                      _addressError = null;
+                                      _quartierError = null;
+                                      _secteurError = null;
+                                      _prixError1 = null;
+                                      _cutionError = null;
+                                      _chambreError = null;
+                                      _salonError = null;
+                                      _douchError = null;
+                                      _toileteError = null;
+                                      _imageError = null;
+                                      _descriptionError = null;
+                                    });
                                     
+                                    if (_nomController.text.isEmpty) {
+                                      setState(() {
+                                        _nomError = "Indiquez le titre de l'annonce.";
+                                      });
+                                    }
+
+                                    if (_selectedTypesprooriete == null) {
+                                      setState(() {
+                                        _typesproorieteError = "Indiquez l'usage.";
+                                      });
+                                    }
+
+                                    if (_selectedSousTypesprooriete == null) {
+                                      setState(() {
+                                        _soustypesproorieteError = "Indiquez la typologie.";
+                                      });
+                                    }
+
+                                    if (_selectedEtatprooriete == null) {
+                                      setState(() {
+                                        _etatproorieteError = "Indiquez la catégorie.";
+                                      });
+                                    }
+
+                                    if (_selectedArrondissement == null) {
+                                      setState(() {
+                                        _arrondissementError = "Indiquez l'arrondissement.";
+                                      });
+                                    }
+
+                                    if (_addressController.text.isEmpty) {
+                                      setState(() {
+                                        _addressError = "Indiquez l'addresse.";
+                                      });
+                                    }
+
+                                    if (_quartierController.text.isEmpty) {
+                                      setState(() {
+                                        _quartierError = "Indiquez le quartier.";
+                                      });
+                                    }
+
+                                    if (_secteurController.text.isEmpty) {
+                                      setState(() {
+                                        _secteurError = "Indiquez le secteur.";
+                                      });
+                                    }
+
+                                    if (_prixController1.text.isEmpty) {
+                                      setState(() {
+                                        _prixError1 = "Indiquez le prix.";
+                                      });
+                                    }
+
+                                    if (_prixController1.text.isNotEmpty && int.parse(_prixController1.text.trim()) < 1000 ) {
+                                      setState(() {
+                                        _prixError1 = "Indiquez un prix positif.";
+                                      });
+                                    }
+
+                                    if (_cutionController.text.isEmpty) {
+                                      setState(() {
+                                        _cutionError = "Indiquez la caution.";
+                                      });
+                                    }
+
+                                    if (_cutionController.text.isNotEmpty && int.parse(_cutionController.text.trim()) < 1 ) {
+                                      setState(() {
+                                        _cutionError = "Indiquez une caution positif.";
+                                      });
+                                    }
+
+                                    if (_chambreController.text.isEmpty) {
+                                      setState(() {
+                                        _chambreError = "Indiquez le nombre de chambre.";
+                                      });
+                                    }
+
+                                    if (_chambreController.text.isNotEmpty && int.parse(_chambreController.text.trim()) < 0 ) {
+                                      setState(() {
+                                        _chambreError = "Le nombre doit être => 0.";
+                                      });
+                                    }
+
+                                    if (_salonController.text.isEmpty) {
+                                      setState(() {
+                                        _salonError = "Indiquez le nombre de salon.";
+                                      });
+                                    }
+
+                                    if (_salonController.text.isNotEmpty && int.parse(_salonController.text.trim()) < 0 ) {
+                                      setState(() {
+                                        _salonError = "Le nombre doit être => 0.";
+                                      });
+                                    }
+
+                                    if (_doucheController.text.isEmpty) {
+                                      setState(() {
+                                        _douchError = "Indiquez le nombre de douche.";
+                                      });
+                                    }
+
+                                    if (_doucheController.text.isNotEmpty && int.parse(_doucheController.text.trim()) < 0 ) {
+                                      setState(() {
+                                        _douchError = "Le nombre doit être => 0.";
+                                      });
+                                    }
+
+                                    if (_toileteController.text.isEmpty) {
+                                      setState(() {
+                                        _toileteError = "Indiquez le nombre de toilette.";
+                                      });
+                                    }
+
+                                    if (_toileteController.text.isNotEmpty && int.parse(_toileteController.text.trim()) < 0 ) {
+                                      setState(() {
+                                        _toileteError = "Le nombre doit être => 0.";
+                                      });
+                                    }
+
+                                    if (imageFiles.isEmpty) {
+                                      setState(() {
+                                        _imageError = "Veuillez indiquer des images.";
+                                      });
+                                    }
+
+                                    if (_descriptionController.text.isEmpty) {
+                                      setState(() {
+                                        _descriptionError = "Veuillez indiquer la description.";
+                                      });
+                                    }
+
+                                    if (
+                                    _nomController.text.isNotEmpty &&
+                                    _selectedTypesprooriete != null &&
+                                    _selectedSousTypesprooriete != null &&
+                                    _selectedEtatprooriete != null &&
+                                    _selectedArrondissement != null &&
+                                    _addressController.text.isNotEmpty &&
+                                    _quartierController.text.isNotEmpty &&
+                                    _secteurController.text.isNotEmpty &&
+                                    _prixController1.text.isNotEmpty && int.parse(_prixController1.text.trim()) >= 1000 &&
+                                    _cutionController.text.isNotEmpty && int.parse(_cutionController.text.trim()) >= 1 &&
+                                    _chambreController.text.isNotEmpty && int.parse(_chambreController.text.trim()) >= 0 &&
+                                    _salonController.text.isNotEmpty && int.parse(_salonController.text.trim()) >= 0 &&
+                                    _doucheController.text.isNotEmpty && int.parse(_doucheController.text.trim()) >= 0 &&
+                                    _toileteController.text.isNotEmpty && int.parse(_toileteController.text.trim()) >= 0 &&
+                                    imageFiles.isNotEmpty && _descriptionController.text.isNotEmpty) {
+                                      final ProgressDialog pr = ProgressDialog(
+                                        context,
+                                        isDismissible: false,
+                                      );
+
+                                      pr.style(
+                                        message: 'Opération en cours...',
+                                        progressWidget: const CircularProgressIndicator(),
+                                      );
+
+                                      await pr.show();
+                                      String etatProScim = _selectedEtatprooriete == 'À louer' ? 'louer' : 'vendre';
+                                      String typesprooriete = _selectedTypesprooriete == 'Commercial' ? 'commercial' : 'residentiel';
+
+                                      try {
+                                        await proprieteProvider.addPropriete(
+                                          _nomController.text.trim(),
+                                          _cutionController.text.trim(),
+                                          _prixController1.text.trim(),
+                                          etatProScim,
+                                          typesprooriete,
+                                          _selectedSousTypesprooriete!,
+                                          _addressController.text.trim(),
+                                          _quartierController.text.trim(),
+                                          _selectedArrondissement!,
+                                          _secteurController.text.trim(),
+                                          _chambreController.text.trim(),
+                                          _salonController.text.trim(),
+                                          _doucheController.text.trim(),
+                                          _toileteController.text.trim(),
+                                          aClimatiseur,
+                                          aTelephone,
+                                          aCuisine,
+                                          aGym,
+                                          aTelevision,
+                                          aWifi,
+                                          aPiscine,
+                                          aGardien,
+                                          aCourant,
+                                          aEau,
+                                          aParking,
+                                          aBacheAEau,
+                                          aChauffeEau,
+                                          aGroupeElectrogene,
+                                          _descriptionController.text.trim(),
+                                          imageFiles,
+                                          documentFile
+                                        );
+
+
+                                        _nomController.clear();
+                                        _salonController.clear();
+                                        _prixController1.clear();
+                                        _cutionController.clear();
+                                        _chambreController.clear();
+                                        _addressController.clear();
+                                        _quartierController.clear();
+                                        _secteurController.clear();
+                                        _doucheController.clear();
+                                        _toileteController.clear();
+                                        _descriptionController.clear();
+
+
+                                        _dropdownSearchArrondissementController.clear();
+                                        _dropdownSearchTypesproorieteController.clear();
+                                        _dropdownSearchSousTypesproorieteController.clear();
+                                        _dropdownSearchEtatproorieteController.clear();
+
+
+                                        _selectedArrondissement       =   null;
+                                        _selectedTypesprooriete       =   null;
+                                        _selectedSousTypesprooriete   =   null;
+                                        _selectedEtatprooriete        =   null;
+
+
+                                        aClimatiseur         =   false;
+                                        aTelephone           =   false;
+                                        aCuisine             =   false;
+                                        aGym                 =   false;
+                                        aTelevision          =   false;
+                                        aWifi                =   false;
+                                        aPiscine             =   false;
+                                        aGardien             =   false;
+                                        aCourant             =   false;
+                                        aEau                 =   false;
+                                        aParking             =   false;
+                                        aBacheAEau           =   false;
+                                        aChauffeEau          =   false;
+                                        aGroupeElectrogene   =   false;
+
+                                        imageFiles.clear();
+                                        documentFile = null;
+                                        
+                                        await pr.hide();
+                                        
+                                        // ignore: use_build_context_synchronously
+                                        showCustomDialog(
+                                          'Votre annonce a été ajoutée avec succès !', 
+                                          Icons.check, 
+                                          Colors.green,
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => const Home(),
+                                              ),
+                                            );
+                                          },
+                                        );
+
+                                      } catch (error) {
+
+                                        await pr.hide(); // Cache le ProgressDialog en cas d'erreur
+                                        showCustomDialog("Une erreur s'est produite lors de lajout de l'annonce.", Icons.error, Colors.red);
+                                      
+                                      }
                                     }
                                   },
                                   style:  ElevatedButton.styleFrom(
@@ -1609,6 +1780,24 @@ class _AjouteScreenState extends State<AjouteScreen> {
     );
   }
 
+  void _removeImage(int index) {
+    setState(() {
+      imageFiles.removeAt(index);
+    });
+  }
+
+  Widget _buildError() {
+    if (_imageError != null) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Text(
+          _imageError!,
+          style: const TextStyle(color: Colors.red),
+        ),
+      );
+    }
+    return const SizedBox.shrink();
+  }
 
   Widget _buildImagePreviews() {
     return GridView.builder(
@@ -1620,11 +1809,31 @@ class _AjouteScreenState extends State<AjouteScreen> {
       ),
       itemCount: imageFiles.length,
       itemBuilder: (context, index) {
-        return Image.file(
-          imageFiles[index],
-          height: 100,
-          width: 100,
-          fit: BoxFit.cover,
+        return Stack(
+          children: [
+            Image.file(
+              imageFiles[index],
+              height: 100,
+              width: 100,
+              fit: BoxFit.cover,
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: GestureDetector(
+                onTap: () => _removeImage(index),
+                child: const CircleAvatar(
+                  radius: 12,
+                  backgroundColor: Colors.red,
+                  child: Icon(
+                    Icons.close,
+                    size: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );

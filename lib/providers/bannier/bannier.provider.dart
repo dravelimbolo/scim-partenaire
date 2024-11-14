@@ -9,7 +9,7 @@ import 'bannier.model.dart';
 
 class BannierProvider with ChangeNotifier {
   static const String domain =
-      'http://192.168.1.68:8000/';
+      'http://192.168.100.186:8000/';
 
   List<Bannier> _banniers = [];
   String? email;

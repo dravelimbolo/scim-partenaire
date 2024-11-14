@@ -114,7 +114,7 @@ class PropertyDetailPageImagesState extends State<PropertyDetailPageImages> {
         alignment: Alignment.bottomRight,
         child: widget.imageUrlsList.length > 1
             ? Container(
-          width: 55,
+              width: (MediaQuery.of(context).size.width * 0.15) + (currentImageIndex),
           padding: const EdgeInsets.all(5),
           decoration: const BoxDecoration(
             color: Colors.white,

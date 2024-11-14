@@ -230,13 +230,16 @@ class TopBarWidget extends StatelessWidget {
 
                         try{
                           await file.copy(newPath);
+                          // ignore: avoid_print
                           print("image_download_success");
 
                         } catch (error) {
+                          // ignore: avoid_print
                           print("download image error 01: $error");
                           
                         }
                       } catch(error) {
+                        // ignore: avoid_print
                         print("download image error 02: $error");
                         
                       }

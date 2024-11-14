@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/user.dart';
 import 'home/screens/ajout_screen.dart';
 import 'home/screens/home_screen.dart';
 import 'home/screens/profil_screen.dart';
@@ -29,6 +31,8 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<User>(context, listen: false);
+    user.connectWebSocket();
     return Scaffold(
       extendBody: true,
       body: IndexedStack(

@@ -49,6 +49,7 @@ class GenericTextWidget extends StatelessWidget {
         locale: locale,
         softWrap: softWrap,
         overflow: overflow,
+        // ignore: deprecated_member_use
         textScaleFactor: textScaleFactor,
         maxLines: maxLines,
         semanticsLabel: semanticsLabel,

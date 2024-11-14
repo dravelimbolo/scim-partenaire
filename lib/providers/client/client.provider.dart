@@ -11,7 +11,7 @@ import 'client.model.dart';
 
 class ClientProvider with ChangeNotifier {
   static const String domain =
-      'http://192.168.1.68:8000/';
+      'http://192.168.100.186:8000/';
 
   List<Client> _clients = [];
   String? email;

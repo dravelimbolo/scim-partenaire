@@ -10,6 +10,7 @@ import './screens/registration_screen.dart';
 import './screens/loading_screen.dart';
 import 'providers/bannier/bannier.provider.dart';
 import 'providers/client/client.provider.dart';
+import 'providers/notification/notification.provider.dart';
 import 'providers/propriete/propriete.provider.dart';
 import 'screens/home.dart';
 import 'screens/home/screens/ajout_screen.dart';
@@ -30,11 +31,22 @@ void main() async {
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
   );
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: (NotificationResponse response) {
+      if (response.payload != null) {
+        // Si la notification est sélectionnée, naviguez vers RejetScreen
+        navigatorKey.currentState?.pushNamed(response.payload!);
+      }
+    },
+  );
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  // await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   runApp(const MyApp());
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -47,6 +59,14 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (cntxt) => User(),
+        ),
+        ChangeNotifierProxyProvider<User, NotificatProvider>(
+          create: (cntxt) => NotificatProvider(email: null, token: null, notificats: []),
+          update: (cntxt, userData, previousNotificats) => NotificatProvider(
+            email: userData.getEmail(),
+            token: userData.getToken(),
+            notificats: previousNotificats != null ? previousNotificats.notificats : [],
+          ),
         ),
         ChangeNotifierProxyProvider<User, ClientProvider>(
           create: (cntxt) => ClientProvider(email: null, token: null, clients: []),
@@ -77,6 +97,7 @@ class MyApp extends StatelessWidget {
         builder: (cnntxt, user, child) {
           SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
           return MaterialApp(
+            navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             title: 'SCIM IMMO',
             theme: ThemeData(
