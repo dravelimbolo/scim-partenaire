@@ -10,7 +10,7 @@ import 'propriete.model.dart';
 
 class ProprieteProvider with ChangeNotifier {
   static const String domain =
-      'http://192.168.100.186:8000/';
+      'https://scim-immo.com/';
 
   List<Propriete> _proprietes = [];
   String? email;

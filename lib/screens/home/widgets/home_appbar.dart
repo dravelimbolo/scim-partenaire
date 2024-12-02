@@ -11,6 +11,8 @@ import '../../../providers/notification/notification.provider.dart';
 import '../../../utils/check_time_date.dart';
 import '../home_controller.dart';
 import 'package:badges/badges.dart' as badges;
+
+import '../screens/notifs_screen.dart';
 // import 'package:badges/badges.dart';
 
 enum SelectedOptions { logout }
@@ -179,8 +181,13 @@ class _HomeAppbarState extends State<HomeAppbar> {
                         ),
                       tooltip: 'Notifications',
                       onPressed: () {
-                        
-                      },
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>  Screen1(notificats : notificatProvider.notificats),
+                          ),
+                        );
+                      },     
                     ),
                   ],
                 ),

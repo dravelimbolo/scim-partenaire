@@ -9,7 +9,7 @@ import 'notification.model.dart';
 
 class NotificatProvider with ChangeNotifier {
   static const String domain =
-      'http://192.168.100.186:8000/';
+      'https://scim-immo.com/';
 
   List<Notificat> _notificats = [];
   String? email;
@@ -58,6 +58,27 @@ class NotificatProvider with ChangeNotifier {
       return _notificats;
     } catch (error) {
       throw error.toString();
+    }
+  }
+
+  Future<void> updateNotification(String codeNotification) async {
+    try {
+      final Uri url = Uri.parse('${domain}notification/$codeNotification/');
+      final Response response = await http.put(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'TOKEN $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Notification mise à jour avec succès.');
+      } else {
+        print('Erreur: ${response.body}');
+      }
+    } catch (error) {
+      print('Erreur: $error');
     }
   }
 

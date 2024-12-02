@@ -1,5 +1,31 @@
 import 'package:flutter/foundation.dart';
 
+class PartenaireResponse with ChangeNotifier  {
+  final int count;
+  final String? next;
+  final String? previous;
+  final List<Propriete> results;
+
+  PartenaireResponse({
+    required this.count,
+    this.next,
+    this.previous,
+    required this.results,
+  });
+
+  factory PartenaireResponse.fromJson(Map<String, dynamic> json) {
+    return PartenaireResponse(
+      count: json['count'],
+      next: json['next'],
+      previous: json['previous'],
+      results: (json['results'] as List)
+          .map((result) => Propriete.fromJson(result))
+          .toList(),
+    );
+  }
+}
+
+
 class Propriete with ChangeNotifier{
     String codeScim;
     List<Image> images;

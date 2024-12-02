@@ -13,7 +13,7 @@ import '../utils/http_exception.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 class User with ChangeNotifier {
-  static const String domain = 'http://192.168.100.186:8000/';
+  static const String domain = 'https://scim-immo.com/';
   String? email;
   String? token;
   Timer? logoutTimer;
@@ -166,7 +166,7 @@ class User with ChangeNotifier {
   void connectWebSocket() {
     try {
       _channel = IOWebSocketChannel.connect(
-        'ws://192.168.100.186:8000/ws/notifications/',
+        'wss://scim-immo.com/ws/notifications/',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'TOKEN $token',
