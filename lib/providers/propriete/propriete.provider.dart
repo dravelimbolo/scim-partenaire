@@ -5,22 +5,43 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart' show Response;
+import 'package:super_paging/super_paging.dart';
 
 import 'propriete.model.dart';
+import 'propriete_paging_source.dart';
+
+
 
 class ProprieteProvider with ChangeNotifier {
-  static const String domain =
-      'https://scim-immo.com/';
-
+  static const String domain = 'https://scim-immo.com/';
   List<Propriete> _proprietes = [];
-  String? email;
-  String? token;
+  final String? email;
+  final String? token;
 
-  ProprieteProvider({
-    required this.email,
-    required this.token,
-    required List<Propriete> proprietes,
-  }) : _proprietes = proprietes;
+  late Pager<int, Propriete> pager;
+
+  ProprieteProvider({required this.email, required this.token, required List<Propriete> proprietes}) {
+    _proprietes = proprietes;
+    pager = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => ProprietePagingSource(token: token),
+    );
+  }
+
+  List<Propriete> get proprietes => _proprietes;
+
+  @override
+  void dispose() {
+    super.dispose();
+    pager.dispose();
+  }
+
+
 
 
   factory ProprieteProvider.fromJson(List<dynamic> jsonProprieteList) {
@@ -31,36 +52,14 @@ class ProprieteProvider with ChangeNotifier {
     return ProprieteProvider(email: null, token: null, proprietes: proprieteList);
   }
 
-  List<Propriete> get proprietes {
-    return _proprietes;
-  }
-
-
 
   void clear() {
     _proprietes.clear();
   }
 
-  Future<List<Propriete>> fetchPropriete() async {
-    try {
-      final Uri url = Uri.parse('${domain}partenaire-list/');
-      final Response response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'TOKEN $token',
-        },
-      );
+  
 
-      final List<dynamic> jsonProprietes = json.decode(response.body);
-      final ProprieteProvider proprieteProvider = ProprieteProvider.fromJson(jsonProprietes);
-      _proprietes = proprieteProvider.proprietes;
-      return proprieteProvider.proprietes;
-    } catch (error) {
-      throw error.toString();
-    }
-  }
-
+  
   Future<List<Propriete>> fetchRechPropriete(
     String? arrondisScim,
     String? typeSubScim,

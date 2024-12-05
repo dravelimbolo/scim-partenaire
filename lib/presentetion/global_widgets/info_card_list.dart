@@ -17,7 +17,7 @@ class InforCardHorizentalList extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         FutureBuilder(
-          future: proprieteProvider.fetchPropriete(),
+          future: proprieteProvider.fetchRechPropriete("","",0,0,"",""),
           builder: (context, snapShot) {
             if (!snapShot.hasData) {
               return SizedBox(
@@ -32,7 +32,7 @@ class InforCardHorizentalList extends StatelessWidget {
                 ),
               );
             } else {
-              List<Propriete> data = snapShot.data!;
+              List<Propriete> data = proprieteProvider.proprietes;
               return SizedBox(
                 height: 160,
                 child: PageView.builder(

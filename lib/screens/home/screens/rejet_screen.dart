@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:super_paging/super_paging.dart';
 import '../../../providers/propriete/propriete.model.dart';
 import '../../../providers/propriete/propriete.provider.dart';
 import '../../../providers/user.dart';
@@ -105,72 +106,54 @@ class RejetScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              TextFiedSearch(),
-              const SizedBox(height: 10),
-                    // List<Propriete> data = spanshot.data!;
-                FutureBuilder(
-                  future: proprieteProvider.fetchPropriete(),
-                  builder: (context, snapShot) {
-                    if (!snapShot.hasData) {
-                      return ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        itemCount: 3,
-                        itemBuilder: (_, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 0.0, right: 0.0),
-                            child: shimerarticleBox01(context: context),
-                          );
-                        }
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            TextFiedSearch(),
+            const SizedBox(height: 10),
+            Consumer<ProprieteProvider>(
+              builder: (context, provider, child) {
+                return Expanded(
+                  child: PagingListView<int, Propriete>(
+                    pager: provider.pager,
+                    itemBuilder: (context, index) {
+                      final propriete = provider.pager.items.elementAt(index);
+                      return Dismissible(
+                        key: Key(propriete.codeScim),
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) {
+                          proprieteProvider.deletePropriete(propriete.codeScim);
+                        },
+                        child: ChangeNotifierProvider.value(
+                          value: propriete,
+                          child: const Padding(
+                            padding: EdgeInsets.only(left: 0.0, right: 0.0),
+                            child: ArticleBox(),
+                          ),
+                        ),
                       );
-                    } else {
-                      final List<Propriete> data = snapShot.data!.where((propriete) => propriete.desapprouver && !propriete.okApprouver).toList();
-                      return  ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        itemCount: data.length,
-                        itemBuilder: (_, index) {
-                          return Dismissible(
-                            key: Key(data[index].codeScim),
-                            background: Container(
-                              color: Colors.red,
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ),
-                            ),
-                            direction: DismissDirection.endToStart,
-                            onDismissed: (direction) {
-                              proprieteProvider.deletePropriete(data[index].codeScim);
-                            },
-                            child: ChangeNotifierProvider.value(
-                              value: data[index],
-                              child: const Padding(
-                                padding: EdgeInsets.only(left: 0.0, right: 0.0),
-                                child: ArticleBox(),
-                              ),
-                            ),
-                          );
-                        }
-                      );
-                    }
-                  },
-                )
-            ],
-          ),
+                    },
+                    loadingBuilder: (context) => const Center(child: CircularProgressIndicator.adaptive()),
+                    errorBuilder: (context, error) => Center(child: Text('Erreur: $error')),
+                    emptyBuilder: (context) => const Center(child: Text('Aucune propriété trouvée')),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
   }
 }
+// final List<Propriete> data = proprieteProvider.proprietes.where((propriete) => propriete.desapprouver && !propriete.okApprouver).toList();
+                

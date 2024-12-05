@@ -19,7 +19,7 @@ class _TermWithIconsWidgetState extends State<TermWithIconsWidget> {
   Widget build(BuildContext context) {
 
     final ProprieteProvider proprieteProvider = Provider.of<ProprieteProvider>(context);
-    proprieteProvider.fetchPropriete();
+    proprieteProvider.fetchRechPropriete("","",0,0,"","");
     
     var width = MediaQuery.of(context).size.width;
     double boxSize = (width / 4) - 5;

@@ -4,7 +4,6 @@ import 'package:scim_partenaire/providers/bannier/bannier.model.dart';
 import 'package:scim_partenaire/providers/bannier/bannier.provider.dart';
 import '../../../presentetion/global_widgets/carousel_ad.dart';
 import '../../../presentetion/global_widgets/info_card_ver_list.dart';
-import '../../home.dart';
 import '../home_controller.dart';
 import '../widgets/bouton/bottoncercle.dart';
 import '../widgets/card/widgetcard/generic_text_widget.dart';
@@ -26,7 +25,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           child: Column(
             children: [
@@ -55,46 +54,40 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               const TermWithIconsWidget(),
-              Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            padding: const EdgeInsets.all(0.0),
-                            child: GenericTextWidget(
-                              'Vos annonces',
-                              strutStyle: const StrutStyle(height: 1.5),
-                              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600, color:  Colors.grey[600]),
-                            ),
-                          ),
-                        )
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          // onTap: () {
-                          //   setRouteToNavigate();
-                          // },
-                          child: const Padding(
-                            padding: EdgeInsets.only(left : 0,right:  8.0,top: 5),
-                            child: GenericTextWidget(
-                              "Voir plus >",
-                              style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color:Color(0xFFE3C35A)),
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GenericTextWidget(
+                        'Vos annonces',
+                        strutStyle: const StrutStyle(height: 1.5),
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[600],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                  const InforCardVerticalList(),
+                  Expanded(
+                    child: GestureDetector(
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 0, right: 8.0, top: 5),
+                        child: GenericTextWidget(
+                          "Voir plus >",
+                          style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w500, color: Color(0xFFE3C35A)),
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
+              const Expanded(child: InforCardVerticalList()),
             ],
           ),
         ),
@@ -102,3 +95,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+
+
