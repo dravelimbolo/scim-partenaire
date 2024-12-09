@@ -377,26 +377,29 @@ class PropertyDetailsPageState extends State<PropertyDetailsPage> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           GenericTextWidget(
-                                            widget.propriete.dateDesapprobation != null ?
-                                            "Occupée : " :
-                                            "Disponible : ",
+                                            widget.propriete.dateDesapprobation != null 
+                                              ? "Occupée : " 
+                                              : widget.propriete.dateApprobation != null 
+                                                ? "Disponible : " 
+                                                : "Ajouté : ",
                                             textAlign: TextAlign.start,
                                             strutStyle: const StrutStyle(height: 1.0),
                                             style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w300, height: 1.8, color: Colors.grey[900]),
                                           ),
                                           Expanded(
                                             child: GenericTextWidget(
-                                              // widget.propriete.dateApprobation,
-                                              widget.propriete.dateDesapprobation != null ?
-                                              DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.propriete.dateDesapprobation as String)):
-                                              DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.propriete.dateApprobation as String)),
+                                              widget.propriete.dateDesapprobation != null 
+                                                ? DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.propriete.dateDesapprobation.toString()))
+                                                : widget.propriete.dateApprobation != null 
+                                                  ? DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.propriete.dateApprobation.toString()))
+                                                  : DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.propriete.dateAddScim.toString())),
                                               textAlign: TextAlign.end,
                                               strutStyle: const StrutStyle(height: 1.0),
                                               style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Colors.grey[900]),
                                             ),
                                           ),
                                         ],
-                                      ),
+                                      )
                                     ),
                                   ],
                                 ),

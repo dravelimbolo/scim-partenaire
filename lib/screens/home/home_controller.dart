@@ -48,7 +48,7 @@ class HomeController{
     'https://cdn.chotot.com/admincentre/83O9GjTqqxMohxXA1DcGEojtznUAIxJYWwTDMhhWp88/preset:raw/plain/bb0f1e32befe115598c292f0b7434fe7-2829010373569559918.jpg',
     'https://cdn.chotot.com/admincentre/586665ff-021b-4eb2-a0a2-acf2405ebedc_banner.jpg',
   ];
-  final String fakeUrl = 'https://flutter.dev';
+  final String fakeUrl = 'https://scim-immo.com';
 
   void launchWebURL(String url) async {
     final Uri uri = Uri.parse(url);

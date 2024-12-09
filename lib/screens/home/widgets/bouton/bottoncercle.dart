@@ -22,13 +22,13 @@ class _TermWithIconsWidgetState extends State<TermWithIconsWidget> {
     proprieteProvider.fetchRechPropriete("","",0,0,"","");
     
     var width = MediaQuery.of(context).size.width;
-    double boxSize = (width / 4) - 5;
+    double boxSize = (width / 4) - 0;
 
     final botondatas = [
-      {"icon": Icons.vpn_key_outlined,"title": "À louer"},
-      {"icon": Icons.real_estate_agent_outlined,"title": "À vendre"},
-      {"icon": Icons.storefront_outlined,"title": "Commercial"},
-      {"icon": Icons.apartment_outlined,"title": "Résidentiel"},
+      {"icon": Icons.house, "title": "À louer"},
+      {"icon": Icons.sell, "title": "À vendre"}, 
+      {"icon": Icons.real_estate_agent, "title": "Loué"}, 
+      {"icon": Icons.verified, "title": "Vendu"},
     ];
 
     return Container(
@@ -46,28 +46,28 @@ class _TermWithIconsWidgetState extends State<TermWithIconsWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BoutonScreen(proprietes: proprieteProvider.locationPropriete,),
+                    builder: (context) => BoutonScreen(propriete: "À louer"),
                   ),
                 );
               } else if (botondatas[index]['title'] as String == "À vendre") {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BoutonScreen(proprietes: proprieteProvider.avendrePropriete,),
+                    builder: (context) => BoutonScreen(propriete: "À vendre"),
                   ),
                 );
-              }else if (botondatas[index]['title'] as String == "Commercial") {
+              }else if (botondatas[index]['title'] as String == "Loué") {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BoutonScreen(proprietes: proprieteProvider.commercialPropriete,),
+                    builder: (context) => BoutonScreen(propriete: "Loué"),
                   ),
                 );
-              }else if (botondatas[index]['title'] as String == "Résidentiel") {
+              }else if (botondatas[index]['title'] as String == "Vendu") {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BoutonScreen(proprietes: proprieteProvider.residentielPropriete,),
+                    builder: (context) => BoutonScreen(propriete: "Vendu"),
                   ),
                 );
               }

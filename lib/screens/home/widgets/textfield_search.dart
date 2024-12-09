@@ -10,8 +10,8 @@ class TextFiedSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(right: 0, left: 0),
-      height: 40,
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      height: 45,
       child: Row(
         children: [
           Expanded(
@@ -27,7 +27,7 @@ class TextFiedSearch extends StatelessWidget {
               },
               child: Container(
                 padding: const EdgeInsets.only(right: 0,left: 10),
-                height: 40,
+                height: 45,
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
                   border: Border.all(color:Colors.grey[100]!, width: 0),
@@ -67,7 +67,7 @@ class TextFiedSearch extends StatelessWidget {
                 );
               },
               child: Container(
-                height: 40,
+                height: 45,
                 padding: const EdgeInsets.only(right: 0, left:  10),
                 decoration: BoxDecoration(
                   color: Colors.grey[100],

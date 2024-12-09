@@ -6,9 +6,7 @@ import '../../../providers/propriete/propriete.provider.dart';
 import '../../../providers/user.dart';
 import '../home_controller.dart';
 import '../widgets/card/article_box_design_01.dart';
-import '../widgets/card/widgetcard/article.shimer.dart';
 import '../widgets/card/widgetcard/generic_text_widget.dart';
-import '../widgets/textfield_search.dart';
 
 enum   SelectedOptions { logout }
 
@@ -55,9 +53,7 @@ class RejetScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final ProprieteProvider proprieteProvider = Provider.of<ProprieteProvider>(context);
-
     return Scaffold(
       appBar: AppBar( 
         backgroundColor: const Color(0xFFE3C35A),
@@ -106,54 +102,52 @@ class RejetScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            TextFiedSearch(),
-            const SizedBox(height: 10),
-            Consumer<ProprieteProvider>(
-              builder: (context, provider, child) {
-                return Expanded(
-                  child: PagingListView<int, Propriete>(
-                    pager: provider.pager,
-                    itemBuilder: (context, index) {
-                      final propriete = provider.pager.items.elementAt(index);
-                      return Dismissible(
-                        key: Key(propriete.codeScim),
-                        background: Container(
-                          color: Colors.red,
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: const Icon(
-                            Icons.delete,
-                            color: Colors.white,
+        child: RefreshIndicator(
+          onRefresh: () => proprieteProvider.refcherejecte(),
+          child: Column(
+            children: [
+              Consumer<ProprieteProvider>(
+                builder: (context, provider, child) {
+                  return Expanded(
+                    child: PagingListView<int, Propriete>(
+                      pager: provider.rejecte,
+                      itemBuilder: (context, index) {
+                        final propriete = provider.rejecte.items.elementAt(index);
+                        return Dismissible(
+                          key: Key(propriete.codeScim),
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 16.0),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        direction: DismissDirection.endToStart,
-                        onDismissed: (direction) {
-                          proprieteProvider.deletePropriete(propriete.codeScim);
-                        },
-                        child: ChangeNotifierProvider.value(
-                          value: propriete,
-                          child: const Padding(
-                            padding: EdgeInsets.only(left: 0.0, right: 0.0),
-                            child: ArticleBox(),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) {
+                            provider.deletePropriete(propriete.codeScim);
+                          },
+                          child: ChangeNotifierProvider.value(
+                            value: propriete,
+                            child: const Padding(
+                              padding: EdgeInsets.only(left: 0.0, right: 0.0),
+                              child: ArticleBox(),
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    loadingBuilder: (context) => const Center(child: CircularProgressIndicator.adaptive()),
-                    errorBuilder: (context, error) => Center(child: Text('Erreur: $error')),
-                    emptyBuilder: (context) => const Center(child: Text('Aucune propriété trouvée')),
-                  ),
-                );
-              },
-            ),
-          ],
+                        );
+                      },
+                      loadingBuilder: (context) => const Center(child: CircularProgressIndicator.adaptive()),
+                      errorBuilder: (context, error) => Center(child: Text('Erreur: $error')),
+                      emptyBuilder: (context) => const Center(child: Text('Aucune propriété trouvée')),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-// final List<Propriete> data = proprieteProvider.proprietes.where((propriete) => propriete.desapprouver && !propriete.okApprouver).toList();
-                

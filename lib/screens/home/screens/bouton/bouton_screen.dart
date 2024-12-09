@@ -5,16 +5,19 @@ import 'package:scim_partenaire/providers/propriete/propriete.provider.dart';
 import 'package:scim_partenaire/providers/user.dart';
 import 'package:scim_partenaire/screens/home/home_controller.dart';
 import 'package:scim_partenaire/screens/home/screens/profil/apropos_screen.dart';
-import 'package:scim_partenaire/screens/home/widgets/card/article_box_design_01.dart';
 import 'package:scim_partenaire/screens/home/widgets/card/widgetcard/generic_text_widget.dart';
+import 'package:super_paging/super_paging.dart';
+
+import '../../../home.dart';
+import '../../widgets/card/article_box_design_01.dart';
 
 class BoutonScreen extends StatelessWidget {
 
   static const String routeName = '/bouton-screen';
 
-  final List<Propriete> proprietes;
+  final String propriete;
 
-  BoutonScreen({super.key, required this.proprietes});
+  BoutonScreen({super.key, required this.propriete});
 
   final HomeController controller = HomeController();
 
@@ -60,21 +63,26 @@ class BoutonScreen extends StatelessWidget {
       appBar: AppBar( 
           backgroundColor: const Color(0xFFE3C35A),
           title:  GenericTextWidget(
-            proprietes.length < 2 ?
-            "${proprietes.length.toString()} résultat":
-            "${proprietes.length.toString()} résultats",
+            propriete,
             strutStyle: const StrutStyle(height: 1),
             style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color:Colors.white),
           ),
           elevation:1.0,
-          leading: Navigator.canPop(context)
-          ? IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            )
-          : null,
+          leading: Builder(
+            builder: (context) {
+              return IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Home(),
+                      ),
+                    );
+                  },
+                );
+            }
+          ),
           actions: [
             PopupMenuButton<SelectedOptions>(
               surfaceTintColor: Colors.white,
@@ -106,27 +114,79 @@ class BoutonScreen extends StatelessWidget {
           ],
         ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        child: RefreshIndicator(
+          onRefresh: () {
+            if (propriete == "À louer") {
+              return proprieteProvider.refchealouer();
+            } else if (propriete == "À vendre") {
+              return proprieteProvider.refcheavendre();
+            } else if (propriete == "Loué") {
+              return proprieteProvider.refcheloue();
+            } else {
+              return proprieteProvider.refchevendu();
+            }
+          },
           child: Column(
             children: [
               const SizedBox(height: 10),
-                ListView.builder(
-                scrollDirection: Axis.vertical,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemCount: proprietes.length,
-                itemBuilder: (_, index) {
-                  return ChangeNotifierProvider.value(
-                    value: proprietes[index],
-                    child: const Padding(
-                      padding: EdgeInsets.only(left: 0.0, right: 0.0),
-                      child: ArticleBox(),
-                    ),
-                  );
+              Consumer<ProprieteProvider>(
+              builder: (context, provider, child) {
+          
+                Pager<int, Propriete> page;
+                
+                if(propriete=="À louer"){
+                  
+                  page  = provider.alouer;
+          
+                }else if(propriete=="À vendre"){
+          
+                  page  = provider.avendre;
+          
+                }else if(propriete=="Loué"){
+          
+                  page  = provider.loue;
+          
+                }else{
+                  
+                  page  = provider.vendu;
+          
                 }
-              )
+                return Expanded(
+                  child: PagingListView<int, Propriete>(
+                    pager: page,
+                    itemBuilder: (context, index) {
+                      final annonce = page.items.elementAt(index);
+                      return Dismissible(
+                        key: Key(annonce.codeScim),
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) {
+                          provider.deletePropriete(annonce.codeScim);
+                        },
+                        child: ChangeNotifierProvider.value(
+                          value: annonce,
+                          child: const Padding(
+                            padding: EdgeInsets.only(left: 0.0, right: 0.0),
+                            child: ArticleBox(),
+                          ),
+                        ),
+                      );
+                    },
+                    loadingBuilder: (context) => const Center(child: CircularProgressIndicator.adaptive()),
+                    errorBuilder: (context, error) => Center(child: Text('Erreur: $error')),
+                    emptyBuilder: (context) => const Center(child: Text('Aucune propriété trouvée')),
+                  ),
+                );
+              },
+            ),
             ],
           ),
         ),

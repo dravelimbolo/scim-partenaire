@@ -18,7 +18,12 @@ class ProprieteProvider with ChangeNotifier {
   final String? email;
   final String? token;
 
+  late Pager<int, Propriete> loue;
+  late Pager<int, Propriete> vendu;
   late Pager<int, Propriete> pager;
+  late Pager<int, Propriete> alouer;
+  late Pager<int, Propriete> avendre;
+  late Pager<int, Propriete> rejecte;
 
   ProprieteProvider({required this.email, required this.token, required List<Propriete> proprietes}) {
     _proprietes = proprietes;
@@ -31,6 +36,51 @@ class ProprieteProvider with ChangeNotifier {
       ),
       pagingSourceFactory: () => ProprietePagingSource(token: token),
     );
+    loue = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => LouePagingSource(token: token),
+    );
+    vendu = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => VenduPagingSource(token: token),
+    );
+    alouer = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => AlouePagingSource(token: token),
+    );
+    avendre = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => AvendrePagingSource(token: token),
+    );
+    rejecte = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => RejectPagingSource(token: token),
+    );
   }
 
   List<Propriete> get proprietes => _proprietes;
@@ -39,9 +89,85 @@ class ProprieteProvider with ChangeNotifier {
   void dispose() {
     super.dispose();
     pager.dispose();
+    loue.dispose();
+    vendu.dispose();
+    alouer.dispose();
+    avendre.dispose();
+    rejecte.dispose();
   }
 
-
+  Future <void> refche() async {
+    pager = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => ProprietePagingSource(token: token),
+    );
+    notifyListeners();
+  }
+  Future <void> refcherejecte() async {
+    rejecte = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => RejectPagingSource(token: token),
+    );
+    notifyListeners();
+  }
+  Future <void> refcheloue() async {
+    loue = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => LouePagingSource(token: token),
+    );
+    notifyListeners();
+  }
+  Future <void> refchevendu() async {
+    vendu = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => VenduPagingSource(token: token),
+    );
+    notifyListeners();
+  }
+  Future <void> refchealouer() async {
+    alouer = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => AlouePagingSource(token: token),
+    );
+    notifyListeners();
+  }
+  Future <void> refcheavendre() async {
+    avendre = Pager<int, Propriete>(
+      initialKey: 1,
+      config: const PagingConfig(
+        pageSize: 2,
+        initialLoadSize: 2,
+        prefetchIndex: 1,
+      ),
+      pagingSourceFactory: () => AvendrePagingSource(token: token),
+    );
+    notifyListeners();
+  }
 
 
   factory ProprieteProvider.fromJson(List<dynamic> jsonProprieteList) {
@@ -54,9 +180,32 @@ class ProprieteProvider with ChangeNotifier {
 
 
   void clear() {
+    
     _proprietes.clear();
+
   }
 
+
+  Future<List<Propriete>> fetchPropriete() async {
+    try {
+      final Uri url = Uri.parse('${domain}partenaire-list/');
+      final Response response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'TOKEN $token',
+        },
+      );
+
+      final Map<String, dynamic> data = json.decode(response.body);
+      final List<dynamic> results = data['results'];
+      final ProprieteProvider proprieteProvider = ProprieteProvider.fromJson(results);
+      _proprietes = proprieteProvider.proprietes;
+      return proprieteProvider.proprietes;
+    } catch (error) {
+      throw error.toString();
+    }
+  }
   
 
   
@@ -89,8 +238,7 @@ class ProprieteProvider with ChangeNotifier {
       );
 
       final List<dynamic> jsonProprietes = json.decode(response.body);
-      final ProprieteProvider proprieteProvider =
-          ProprieteProvider.fromJson(jsonProprietes);
+      final ProprieteProvider proprieteProvider = ProprieteProvider.fromJson(jsonProprietes);
       _proprietes = proprieteProvider.proprietes;
       return proprieteProvider.proprietes;
     } catch (error) {

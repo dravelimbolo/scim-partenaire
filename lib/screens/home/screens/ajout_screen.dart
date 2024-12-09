@@ -333,7 +333,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                           children: [
                             AppTextField(
                               controller: _nomController,
-                              maxLength: 9,
+                              maxLength: 25,
                               textFieldType: TextFieldType.NAME,
                               decoration: kInputDecoration.copyWith(
                                 labelText: "Titre de l'annonce",
@@ -1720,7 +1720,7 @@ class _AjouteScreenState extends State<AjouteScreen> {
                                           Icons.check, 
                                           Colors.green,
                                           onPressed: () {
-                                            Navigator.push(
+                                            Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) => const Home(),

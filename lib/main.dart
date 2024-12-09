@@ -18,6 +18,7 @@
   import 'screens/home/screens/profil/apropos_screen.dart';
   import 'screens/home/screens/profil/confidentialite_screen.dart';
   import 'screens/home/screens/rejet_screen.dart';
+import 'screens/home/screens/reslut_screen.dart';
 
 
   // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -136,6 +137,7 @@
                 HomeScreen.routeName: (cntxt) =>  HomeScreen(),
                 AjouteScreen.routeName: (cntxt) =>  const AjouteScreen(),
                 RejetScreen.routeName: (cntxt) =>  RejetScreen(),
+                ToutScreen.routeName: (cntxt) =>  ToutScreen(),
                 LoginScreen.routeName: (cntxt) => const LoginScreen(),
                 ApropoScreen.routeName: (cntxt) => const ApropoScreen(),
                 PoliticScreen.routeName: (cntxt) => const PoliticScreen(),
