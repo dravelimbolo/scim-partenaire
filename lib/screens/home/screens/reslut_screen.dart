@@ -58,7 +58,7 @@ class ToutScreen extends StatelessWidget {
       appBar: AppBar( 
         backgroundColor: const Color(0xFFE3C35A),
         title:  const GenericTextWidget(
-          "Propriétés rejetées",
+          "Vos annonces",
           strutStyle: StrutStyle(height: 1),
           style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400, color:Colors.white),
         ),
@@ -139,7 +139,7 @@ class ToutScreen extends StatelessWidget {
                       },
                       loadingBuilder: (context) => const Center(child: CircularProgressIndicator.adaptive()),
                       errorBuilder: (context, error) => Center(child: Text('Erreur: $error')),
-                      emptyBuilder: (context) => const Center(child: Text('Aucune propriété trouvée')),
+                      emptyBuilder: (context) => const Center(child: Text('Aucune annonce trouvée')),
                     ),
                   );
                 },

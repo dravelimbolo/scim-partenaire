@@ -172,10 +172,10 @@ class PoliticScreen extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: GenericTextWidget(
-                    "Nous utilisons vos informations pour personnaliser votre expérience sur la plateforme, faciliter la recherche de propriétés, et vous informer sur des mises à jour importantes. Nous ne partageons pas vos informations avec des tiers sans votre consentement, sauf si la loi l'exige.",
+                    "Nous utilisons vos informations pour personnaliser votre expérience sur la plateforme, faciliter la recherche des annonces, et vous informer sur des mises à jour importantes. Nous ne partageons pas vos informations avec des tiers sans votre consentement, sauf si la loi l'exige.",
                     enableCopy: true,
                     onLongPress: (){
-                      Clipboard.setData(const ClipboardData(text:"Nous utilisons vos informations pour personnaliser votre expérience sur la plateforme, faciliter la recherche de propriétés, et vous informer sur des mises à jour importantes. Nous ne partageons pas vos informations avec des tiers sans votre consentement, sauf si la loi l'exige."));
+                      Clipboard.setData(const ClipboardData(text:"Nous utilisons vos informations pour personnaliser votre expérience sur la plateforme, faciliter la recherche des annonces, et vous informer sur des mises à jour importantes. Nous ne partageons pas vos informations avec des tiers sans votre consentement, sauf si la loi l'exige."));
                     },
                     strutStyle:
                     const StrutStyle(height:1.6),

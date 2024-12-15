@@ -96,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.all(0.0),
                               child: GenericTextWidget(
-                                'Dernières propriétés',
+                                'Dernières annonces',
                                 strutStyle: const StrutStyle(height: 1.5),
                                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600, color:  Colors.grey[600]),
                               ),

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:scim_partenaire/providers/propriete/propriete.provider.dart';
 import 'package:scim_partenaire/screens/home/screens/bouton/bouton_screen.dart';
 
 import '../card/widgetcard/generic_text_widget.dart';
@@ -17,9 +15,6 @@ class _TermWithIconsWidgetState extends State<TermWithIconsWidget> {
   
   @override
   Widget build(BuildContext context) {
-
-    final ProprieteProvider proprieteProvider = Provider.of<ProprieteProvider>(context);
-    proprieteProvider.fetchRechPropriete("","",0,0,"","");
     
     var width = MediaQuery.of(context).size.width;
     double boxSize = (width / 4) - 0;

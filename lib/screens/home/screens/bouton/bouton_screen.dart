@@ -182,7 +182,7 @@ class BoutonScreen extends StatelessWidget {
                     },
                     loadingBuilder: (context) => const Center(child: CircularProgressIndicator.adaptive()),
                     errorBuilder: (context, error) => Center(child: Text('Erreur: $error')),
-                    emptyBuilder: (context) => const Center(child: Text('Aucune propriété trouvée')),
+                    emptyBuilder: (context) => const Center(child: Text('Aucune annonce trouvée')),
                   ),
                 );
               },
