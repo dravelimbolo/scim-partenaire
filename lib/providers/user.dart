@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart' show Response;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
-import '../screens/home/screens/rejet_screen.dart';
+import '../screens/home/screens/notifs_screen.dart';
 import '../utils/http_exception.dart';
 
 
@@ -209,7 +209,7 @@ class User with ChangeNotifier {
       indenti,
       message,
       platformChannelSpecifics,
-      payload: RejetScreen.routeName,
+      payload: Screen1.routeName,
     );
   }
 }

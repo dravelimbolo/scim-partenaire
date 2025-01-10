@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart' show Response;
 
@@ -73,12 +72,18 @@ class NotificatProvider with ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        print('Notification mise à jour avec succès.');
+        if (kDebugMode) {
+          print('Notification mise à jour avec succès.');
+        }
       } else {
-        print('Erreur: ${response.body}');
+        if (kDebugMode) {
+          print('Erreur: ${response.body}');
+        }
       }
     } catch (error) {
-      print('Erreur: $error');
+      if (kDebugMode) {
+        print('Erreur: $error');
+      }
     }
   }
 
